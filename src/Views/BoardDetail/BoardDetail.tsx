@@ -1,5 +1,5 @@
 import { ArrowLeft, Pencil } from "lucide-react";
-import BoardDetailCard from "./components/BoardDetalCard";
+import BoardDetailCard from "./components/BoardDetailCard";
 import { Link } from "react-router-dom";
 function BoardDetail() {
   return (
@@ -13,7 +13,7 @@ function BoardDetail() {
 
         <Pencil className="p-1" />
       </div>
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 p-5">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10">
         <BoardDetailCard status="Todo" />
         <BoardDetailCard status="in Progress" />
         <BoardDetailCard status="Done" />
