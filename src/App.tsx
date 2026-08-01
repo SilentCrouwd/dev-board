@@ -21,7 +21,7 @@ const router = createBrowserRouter(
       ],
     },
   ],
-  { basename: "dev-Board" },
+  { basename: "dev-board" },
 );
 
 function App() {
