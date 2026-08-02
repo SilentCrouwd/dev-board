@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import type { BoardCardProps } from "../../../types/boardType";
 import {
   Card,
   CardAction,
@@ -9,27 +10,32 @@ import {
 } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
 
-function BoardCard() {
+function BoardCard({
+  boardTitle,
+  taskValue,
+  boardId,
+}: Readonly<BoardCardProps>) {
   return (
-    <Link to={"/boards/12"}>
-      <Card className="border hover:scale-102">
-        <CardHeader>
-          <CardTitle className="hover:underline">Title</CardTitle>
+    <Card className="border hover:scale-102">
+      <CardHeader>
+        <Link to={`/boards/${boardId}`}>
+          <CardTitle className="hover:underline">{boardTitle}</CardTitle>
+
           <CardDescription className="text-xs">
-            3 Spalten:0 Tasks{" "}
+            3 Spalten:{taskValue} Tasks
           </CardDescription>
-          <CardAction>
-            {" "}
-            <Button
-              variant="outline"
-              className="border-none text-muted bg-card hover:bg-card hover:text-red-700"
-            >
-              <Trash2 />
-            </Button>
-          </CardAction>
-        </CardHeader>
-      </Card>
-    </Link>
+        </Link>
+        <CardAction>
+          {" "}
+          <Button
+            variant="outline"
+            className="border-none text-muted bg-card hover:bg-card hover:text-red-700"
+          >
+            <Trash2 />
+          </Button>
+        </CardAction>
+      </CardHeader>
+    </Card>
   );
 }
 export default BoardCard;

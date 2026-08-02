@@ -6,34 +6,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { DetailCardProps } from "@/types/boardType";
 import { Plus } from "lucide-react";
 
-interface DetailCardProps {
-  status: string;
-  statusValue?: number;
-  tasks?: string;
-}
-
 function BoardDetailCard({
-  status,
+  cardTitle,
   statusValue,
-  tasks,
+ tasksCard,
 }: Readonly<DetailCardProps>) {
   return (
     <Card className="border gap-0 bg-transparent">
       <CardHeader className=" items-center justify-between flex">
         <CardTitle className="">
-          {status}
+          {cardTitle}
           <span className="text-xs text-muted"> {statusValue ?? 0}</span>
         </CardTitle>
         <CardAction>
-          <Button className="bg-transparent text-main">
+          <Button className="bg-transparent text-main hover:cursor-pointer">
             <Plus />
           </Button>
         </CardAction>
       </CardHeader>
       <CardFooter className="bg-transparent flex justify-center items-center min-h-25 ">
-        {tasks || "Keine Task vorhanden"}
+        {tasksCard || "Keine Task vorhanden"}
       </CardFooter>
     </Card>
   );
