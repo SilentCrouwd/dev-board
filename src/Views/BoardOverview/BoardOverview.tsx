@@ -3,7 +3,7 @@ import BoardCard from "./components/BoardCard";
 import BoardDialog from "./components/BoardDialog";
 import type { BoardType } from "@/types/boardType";
 function BoardOverview() {
-  const [board, setBoard] = useState<BoardType>({
+  const [board] = useState<BoardType>({
     boardTitle: "hallo",
     Task: [{ taskTitle: "hallo2", taskDescription: "hir is ne beschreibung" }],
   });
