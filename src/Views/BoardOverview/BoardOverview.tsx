@@ -3,10 +3,20 @@ import BoardCard from "./components/BoardCard";
 import BoardDialog from "./components/BoardDialog";
 import type { BoardType } from "@/types/boardType";
 function BoardOverview() {
-  const [board] = useState<BoardType>({
-    boardTitle: "hallo",
-    Task: [{ taskTitle: "hallo2", taskDescription: "hir is ne beschreibung" }],
-  });
+  const [board] = useState<BoardType[]>([
+    {
+      boardTitle: "hallo",
+      boardId: Date.now(),
+      task: [
+        {
+          taskId: Date.now(),
+          taskTitle: "hallo2",
+          taskDescription: "hir is ne beschreibung",
+          taskStatus: "todo",
+        },
+      ],
+    },
+  ]);
   return (
     <div className="flex flex-col  ">
       <div className="w-full flex justify-between items-center px-2 mt-5 lg:max-w-[1000px] mx-auto">
@@ -15,14 +25,18 @@ function BoardOverview() {
       </div>
       <div className="w-full flex justify-between items-center px-2 mt-5 lg:max-w-[1000px] mx-auto">
         {/* Hier ist eine Hilfs Variable sie wird ersetzt wenn die Logic fertig ist und fragt ab ob ein Eintrag vorhanden ist */}
-        {board.boardTitle !== "" ? (
+        {board.length !== 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-3 w-full p-2">
-            <BoardCard
-              boardTitle={board.boardTitle}
-              taskValue={board.Task.length}
-              handleDelete={() => {}}
-              boardId={Date.now()}
-            />
+            {board.map((currBoard) => {
+              return (
+                <BoardCard
+                  key={currBoard.boardId}
+                  boardTitle={currBoard.boardTitle}
+                  taskValue={currBoard.task?.length ?? 0}
+                  boardId={currBoard.boardId}
+                />
+              );
+            })}
           </div>
         ) : (
           <p className="text-lg italic text-muted text-center">

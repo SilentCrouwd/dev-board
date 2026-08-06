@@ -12,7 +12,7 @@ import { Plus } from "lucide-react";
 function BoardDetailCard({
   cardTitle,
   statusValue,
- tasksCard,
+  tasksCard,
 }: Readonly<DetailCardProps>) {
   return (
     <Card className="border gap-0 bg-transparent">
@@ -28,7 +28,7 @@ function BoardDetailCard({
         </CardAction>
       </CardHeader>
       <CardFooter className="bg-transparent flex justify-center items-center min-h-25 ">
-        {tasksCard || "Keine Task vorhanden"}
+        {tasksCard?.length !== 0 ? tasksCard : "keine Task vorhanden"}
       </CardFooter>
     </Card>
   );
