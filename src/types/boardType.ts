@@ -9,7 +9,7 @@ export interface BoardType {
 export interface BoardTaskProps {
   taskTitle: string;
   taskDescription: string;
-  taskId: number | string;
+  taskId?: number | string;
   taskStatus?: "todo" | "inProgress" | "Done";
 }
 export interface BoardCardProps {

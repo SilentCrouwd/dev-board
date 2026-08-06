@@ -8,7 +8,10 @@ function BoardTask({ taskTitle, taskDescription, taskId }: BoardTaskProps) {
       <div className="grid grid-cols-[1fr_8fr_1fr] items-center  ">
         <GripVertical />
         <div>
-          <p className="text-lg font-bold">{taskTitle}</p>
+          <p className="text-lg font-bold">
+            {taskTitle}
+            {taskId}
+          </p>
           <p className="text-md text-muted ">{taskDescription}</p>
         </div>
         <Button variant="ghost" size={"icon-lg"} className="">
