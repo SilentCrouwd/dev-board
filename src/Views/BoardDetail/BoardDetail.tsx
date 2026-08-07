@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, Key, Pencil, X } from "lucide-react";
+import { ArrowLeft, Check, Pencil, X } from "lucide-react";
 import BoardDetailCard from "./components/BoardDetailCard";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
