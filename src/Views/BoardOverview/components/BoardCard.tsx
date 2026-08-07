@@ -29,7 +29,7 @@ function BoardCard({
           {" "}
           <Button
             variant="outline"
-            className="border-none text-muted bg-card hover:bg-card hover:text-red-700"
+            className="border-none text-muted bg-card hover:bg-card hover:text-red-700 "
           >
             <Trash2 />
           </Button>

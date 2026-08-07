@@ -10,21 +10,21 @@ import type { BoardType } from "@/types/boardType";
 
 function BoardDetail() {
   // hier wird noch mit der ID des Bords Gefiltert das ich es nicht über Board[0] einlesen muss hier sollte nur ein Board sein
-  // die idee id aus der adressleiste auslesen 
-  // array aus dem Storage holen und Filtern 
+  // die idee id aus der adressleiste auslesen
+  // array aus dem Storage holen und Filtern
   const [board, setBoard] = useState<BoardType[]>([
     {
       boardTitle: "hallo",
       boardId: Date.now(),
       task: [
         {
-          taskId: Date.now(),
+          taskId: Date.now().toString(),
           taskTitle: "hallo2",
           taskDescription: "hir is ne beschreibung",
-          taskStatus: "Done",
+          taskStatus: "todo",
         },
         {
-          taskId: Date.now(),
+          taskId: Date.now().toString(),
           taskTitle: "hallo4",
           taskDescription: "hir is ne beschreibung",
           taskStatus: "inProgress",
@@ -33,13 +33,6 @@ function BoardDetail() {
     },
   ]);
   const [editMode, setEditMode] = useState(false);
-
-  function filterColumns(taskStatus: string) {
-    const filteredTask = board[0].task.filter(
-      (currTask) => currTask.taskStatus === taskStatus,
-    );
-    return filteredTask;
-  }
 
   function renderBoardDetailContent() {
     return (
@@ -69,45 +62,9 @@ function BoardDetail() {
           </Button>
         </div>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10">
-          <BoardDetailCard
-            cardTitle={"todo"}
-            tasksCard={filterColumns("todo").map((currTask) => {
-              return (
-                <BoardTask
-                  taskId={currTask.taskId}
-                  key={currTask.taskId}
-                  taskDescription={currTask.taskDescription}
-                  taskTitle={currTask.taskTitle}
-                />
-              );
-            })}
-          />
-          <BoardDetailCard
-            cardTitle={"inProgress"}
-            tasksCard={filterColumns("inProgress").map((currTask) => {
-              return (
-                <BoardTask
-                  taskId={currTask.taskId}
-                  key={currTask.taskId}
-                  taskDescription={currTask.taskDescription}
-                  taskTitle={currTask.taskTitle}
-                />
-              );
-            })}
-          />
-          <BoardDetailCard
-            cardTitle={"Done"}
-            tasksCard={filterColumns("Done").map((currTask) => {
-              return (
-                <BoardTask
-                  taskId={currTask.taskId}
-                  key={currTask.taskId}
-                  taskDescription={currTask.taskDescription}
-                  taskTitle={currTask.taskTitle}
-                />
-              );
-            })}
-          />
+          <BoardDetailCard cardTitle={"todo"} task={board[0].task} />
+          <BoardDetailCard cardTitle={"inProgress"} task={board[0].task} />
+          <BoardDetailCard cardTitle={"Done"} task={board[0].task} />
         </div>
       </div>
     );
@@ -162,47 +119,7 @@ function BoardDetail() {
             </Button>
           </Field>
         </FieldGroup>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10">
-          <BoardDetailCard
-            cardTitle={"todo"}
-            tasksCard={filterColumns("todo").map((currTask) => {
-              return (
-                <BoardTask
-                  taskId={currTask.taskId}
-                  key={currTask.taskId}
-                  taskDescription={currTask.taskDescription}
-                  taskTitle={currTask.taskTitle}
-                />
-              );
-            })}
-          />
-          <BoardDetailCard
-            cardTitle={"inProgress"}
-            tasksCard={filterColumns("inProgress").map((currTask) => {
-              return (
-                <BoardTask
-                  taskId={currTask.taskId}
-                  key={currTask.taskId}
-                  taskDescription={currTask.taskDescription}
-                  taskTitle={currTask.taskTitle}
-                />
-              );
-            })}
-          />
-          <BoardDetailCard
-            cardTitle={"Done"}
-            tasksCard={filterColumns("Done").map((currTask) => {
-              return (
-                <BoardTask
-                  taskId={currTask.taskId}
-                  key={currTask.taskId}
-                  taskDescription={currTask.taskDescription}
-                  taskTitle={currTask.taskTitle}
-                />
-              );
-            })}
-          />{" "}
-        </div>
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10"></div>
       </div>
     );
   }

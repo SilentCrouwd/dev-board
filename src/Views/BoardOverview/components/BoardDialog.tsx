@@ -21,7 +21,7 @@ function BoardDialog() {
         <DialogTrigger
           render={
             <Button
-              className="text-sm  px-4 py-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
+              className="text-sm border-none  px-4 py-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
               variant="outline"
             >
               <Plus /> Neues Board
