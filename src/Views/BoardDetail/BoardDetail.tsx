@@ -25,7 +25,7 @@ function BoardDetail() {
         },
         {
           taskId: Date.now(),
-          taskTitle: "hallo2",
+          taskTitle: "hallo4",
           taskDescription: "hir is ne beschreibung",
           taskStatus: "inProgress",
         },

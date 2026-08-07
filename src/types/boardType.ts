@@ -22,3 +22,8 @@ export interface DetailCardProps {
   statusValue?: number;
   tasksCard?: ReactNode[];
 }
+
+export interface User {
+  userName: string;
+  board: BoardType[];
+}
