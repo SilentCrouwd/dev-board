@@ -24,10 +24,10 @@ function BoardDetail() {
           taskStatus: "todo",
         },
         {
-          taskId: Date.now().toString(),
+          taskId: 12 + Date.now().toString(),
           taskTitle: "hallo4",
           taskDescription: "hir is ne beschreibung",
-          taskStatus: "inProgress",
+          taskStatus: "todo",
         },
       ],
     },
