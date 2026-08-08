@@ -13,8 +13,15 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
-function BoardDialog() {
+interface boardDialog {
+  handleAddBoard: (title: string) => void;
+}
+
+function BoardDialog({ handleAddBoard }: boardDialog) {
+  const [value, setValue] = useState("");
+
   return (
     <Dialog>
       <form>
@@ -43,6 +50,10 @@ function BoardDialog() {
                 id="name-1"
                 name="name"
                 placeholder="Board-Name"
+                onChange={(e) => {
+                  setValue(e.currentTarget.value);
+                }}
+                value={value}
               />
             </Field>
           </FieldGroup>
@@ -59,8 +70,8 @@ function BoardDialog() {
               }
             />
             <Button
+              onClick={() => handleAddBoard(value)}
               className=" p-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
-              type="submit"
             >
               Erstellen
             </Button>

@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 export interface BoardType {
   boardTitle: string;
   boardId: string | number;
@@ -9,7 +7,7 @@ export interface BoardType {
 export interface BoardTaskProps {
   taskTitle: string;
   taskDescription: string;
-  taskId?: string;
+  taskId?: string | number;
   taskStatus?: "todo" | "inProgress" | "Done";
 }
 export interface BoardCardProps {

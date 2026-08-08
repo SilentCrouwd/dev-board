@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import BoardCard from "./components/BoardCard";
 import BoardDialog from "./components/BoardDialog";
 import type { BoardType } from "@/types/boardType";
+import { BoardCRUD, initialState } from "@/Hooks/BoardCRUDReducer";
 function BoardOverview() {
+  const [state, dispatch] = useReducer(BoardCRUD, initialState);
+
   const [board] = useState<BoardType[]>([
     {
       boardTitle: "hallo",
@@ -17,11 +20,19 @@ function BoardOverview() {
       ],
     },
   ]);
+
+  function handleAddBoard(boardName: any) {
+    dispatch({ type: "ADD", payload: boardName });
+  }
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
   return (
     <div className="flex flex-col  ">
       <div className="w-full flex justify-between items-center px-5 mt-5 lg:max-w-[1000px] mx-auto">
         <h2 className=" text-2xl font-bold">Meine Boards</h2>
-        <BoardDialog />
+        <BoardDialog handleAddBoard={handleAddBoard} />
       </div>
       <div className="w-full flex justify-between items-center px-5 mt-5 lg:max-w-[1000px] mx-auto">
         {/* Hier ist eine Hilfs Variable sie wird ersetzt wenn die Logic fertig ist und fragt ab ob ein Eintrag vorhanden ist */}
@@ -33,7 +44,7 @@ function BoardOverview() {
                   key={currBoard.boardId}
                   boardTitle={currBoard.boardTitle}
                   taskValue={currBoard.task?.length ?? 0}
-                  boardId={currBoard.boardId}
+                  boardId={Number(currBoard.boardId)}
                 />
               );
             })}
