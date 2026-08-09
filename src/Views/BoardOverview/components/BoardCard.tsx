@@ -8,7 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Trash2 } from "lucide-react";
+import { Trash2, Type } from "lucide-react";
+import { useReducer } from "react";
+import { BoardCRUD, initialState } from "@/Hooks/BoardCRUDReducer";
+import { setToAPI } from "@/Hooks/StorageAPI";
 
 function BoardCard({
   boardTitle,
