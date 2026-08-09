@@ -1,4 +1,3 @@
-import { useReducer } from "react";
 import type { BoardType } from "@/types/boardType";
 
 export interface BoardState {

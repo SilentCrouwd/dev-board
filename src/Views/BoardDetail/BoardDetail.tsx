@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import BoardTask from "./components/BoardTask";
 import type { BoardType } from "@/types/boardType";
 
 function BoardDetail() {
