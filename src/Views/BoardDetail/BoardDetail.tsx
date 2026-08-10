@@ -1,37 +1,26 @@
 import { ArrowLeft, Check, Pencil, X } from "lucide-react";
 import BoardDetailCard from "./components/BoardDetailCard";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import type { BoardType } from "@/types/boardType";
+import { useBoardContext } from "@/Context/BoardContext";
+import { setToAPI } from "@/Hooks/StorageAPI";
 
 function BoardDetail() {
-  // hier wird noch mit der ID des Bords Gefiltert das ich es nicht über Board[0] einlesen muss hier sollte nur ein Board sein
-  // die idee id aus der adressleiste auslesen
-  // array aus dem Storage holen und Filtern
-  const [board, setBoard] = useState<BoardType[]>([
-    {
-      boardTitle: "hallo",
-      boardId: Date.now(),
-      task: [
-        {
-          taskId: Date.now().toString(),
-          taskTitle: "hallo2",
-          taskDescription: "hir is ne beschreibung",
-          taskStatus: "todo",
-        },
-        {
-          taskId: 12 + Date.now().toString(),
-          taskTitle: "hallo4",
-          taskDescription: "hir is ne beschreibung",
-          taskStatus: "todo",
-        },
-      ],
-    },
-  ]);
+  const { state, dispatch } = useBoardContext();
+  const { id } = useParams();
+  const currentBoard = state?.Boards?.filter((b) => b.boardId === Number(id));
   const [editMode, setEditMode] = useState(false);
+
+  if (!currentBoard) {
+    return <div>No Board found</div>;
+  }
+  useEffect(() => {
+    setToAPI(state);
+  }, [state]);
+  const [value, setValue] = useState(currentBoard[0].boardTitle);
 
   function renderBoardDetailContent() {
     return (
@@ -47,7 +36,7 @@ function BoardDetail() {
             </Button>
           </Link>
 
-          <p className="font-bold text-xl">{board[0].boardTitle}</p>
+          <p className="font-bold text-xl">{currentBoard[0].boardTitle}</p>
 
           <Button
             variant="ghost"
@@ -61,9 +50,12 @@ function BoardDetail() {
           </Button>
         </div>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10">
-          <BoardDetailCard cardTitle={"todo"} task={board[0].task} />
-          <BoardDetailCard cardTitle={"inProgress"} task={board[0].task} />
-          <BoardDetailCard cardTitle={"Done"} task={board[0].task} />
+          <BoardDetailCard cardTitle={"todo"} task={currentBoard[0].task} />
+          <BoardDetailCard
+            cardTitle={"inProgress"}
+            task={currentBoard[0].task}
+          />
+          <BoardDetailCard cardTitle={"Done"} task={currentBoard[0].task} />
         </div>
       </div>
     );
@@ -83,13 +75,9 @@ function BoardDetail() {
           </Link>
           <Field className="w-1/2">
             <Input
-              value={board[0].boardTitle}
+              value={value}
               onChange={(e) => {
-                const newTitle = e.currentTarget.value;
-                setBoard((prev) => ({
-                  ...prev,
-                  boardTitle: newTitle,
-                }));
+                setValue(e.currentTarget.value);
               }}
               id="fieldgroup-name"
               className="border border-primary max-w-full "
@@ -111,6 +99,11 @@ function BoardDetail() {
               type="submit"
               className="bg-transparent text-main hover:cursor-pointer"
               onClick={() => {
+                dispatch({
+                  type: "UPDATE",
+                  payload: { id: Number(id), value: value },
+                });
+
                 setEditMode(!editMode);
               }}
             >

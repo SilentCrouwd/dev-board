@@ -3,14 +3,13 @@ import type { BoardType } from "@/types/boardType";
 export interface BoardState {
   Boards: BoardType[];
 }
-export const initialState: BoardState = {
-  Boards: [],
-};
-export type BoardAction =
-  | { type: "ADD"; payload: BoardType }
-  | { type: "DEL"; payload: string | number };
 
-export function BoardCRUD(state: BoardState, action: any) {
+export type BoardAction =
+  | { type: "ADD"; payload: string }
+  | { type: "DEL"; payload: string | number }
+  | { type: "UPDATE"; payload: { id: number; value: string } };
+
+export function BoardCRUD(state: BoardState, action: BoardAction) {
   switch (action.type) {
     case "ADD":
       return {
@@ -25,11 +24,20 @@ export function BoardCRUD(state: BoardState, action: any) {
         ],
       };
     case "DEL":
-      console.log("Gesamter State:", state);
       return {
         ...state,
         Boards: state.Boards.filter(
           (currBoards) => currBoards.boardId !== action.payload,
+        ),
+      };
+
+    case "UPDATE":
+      return {
+        ...state,
+        Boards: state.Boards.map((board) =>
+          board.boardId === action.payload.id
+            ? { ...board, boardTitle: action.payload.value }
+            : board,
         ),
       };
 

@@ -8,20 +8,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Trash2, Type } from "lucide-react";
-import { useReducer } from "react";
-import { BoardCRUD, initialState } from "@/Hooks/BoardCRUDReducer";
-import { setToAPI } from "@/Hooks/StorageAPI";
+import { Trash2 } from "lucide-react";
+import { useBoardContext } from "@/Context/BoardContext";
 
 function BoardCard({
   boardTitle,
   taskValue,
   boardId,
 }: Readonly<BoardCardProps>) {
+  const BoardContext = useBoardContext();
   return (
     <Card className="border hover:scale-102">
       <CardHeader>
-        <Link to={`/boards/${boardId}`}>
+        <Link to={`/boards/${boardId}`} >
           <CardTitle className="hover:underline">{boardTitle}</CardTitle>
 
           <CardDescription className="text-xs">
@@ -31,6 +30,9 @@ function BoardCard({
         <CardAction>
           {" "}
           <Button
+            onClick={() => {
+              BoardContext.dispatch({ type: "DEL", payload: boardId });
+            }}
             variant="outline"
             className="border-none text-muted bg-card hover:bg-card hover:text-red-700 "
           >

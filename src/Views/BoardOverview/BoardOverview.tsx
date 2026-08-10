@@ -1,29 +1,24 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect } from "react";
 import BoardCard from "./components/BoardCard";
 import BoardDialog from "./components/BoardDialog";
-import { BoardCRUD } from "@/Hooks/BoardCRUDReducer";
-import { getFromAPI, setToAPI } from "@/Hooks/StorageAPI";
+import { setToAPI } from "@/Hooks/StorageAPI";
+import { useBoardContext } from "@/Context/BoardContext";
 function BoardOverview() {
-  const [state, dispatch] = useReducer(BoardCRUD, getFromAPI());
+  const BoardContext = useBoardContext();
 
-  function handleAddBoard(boardName: any) {
-    dispatch({ type: "ADD", payload: boardName });
-  }
-
-  //  hier muss das dispatch durchgereicht werden
   useEffect(() => {
-    setToAPI(state);
-  }, [state]);
+    setToAPI(BoardContext.state);
+  }, [BoardContext.state]);
   return (
     <div className="flex flex-col  ">
       <div className="w-full flex justify-between items-center px-5 mt-5 lg:max-w-[1000px] mx-auto">
         <h2 className=" text-2xl font-bold">Meine Boards</h2>
-        <BoardDialog handleAddBoard={handleAddBoard} />
+        <BoardDialog />
       </div>
       <div className="w-full flex justify-between items-center px-5 mt-5 lg:max-w-[1000px] mx-auto">
-        {state.Boards.length ? (
+        {BoardContext.state.Boards.length ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-3 w-full ">
-            {state.Boards.map((currBoard) => {
+            {BoardContext.state.Boards.map((currBoard) => {
               return (
                 <BoardCard
                   key={currBoard.boardId}

@@ -12,16 +12,29 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useBoardContext } from "@/Context/BoardContext";
+import { getFromAPI } from "@/Hooks/StorageAPI";
+import type { BoardType } from "@/types/boardType";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-interface boardDialog {
-  handleAddBoard: (title: string) => void;
-}
-
-function BoardDialog({ handleAddBoard }: boardDialog) {
+function BoardDialog() {
+  const BoardContext = useBoardContext();
   const [value, setValue] = useState("");
 
+  function handleCheckExist() {
+    const currList = getFromAPI();
+    const exist = currList.Boards.find(
+      (board: BoardType) => board.boardTitle === value,
+    );
+    if (!exist) {
+      BoardContext.dispatch({ type: "ADD", payload: value });
+    } else {
+      // Bitte noch schöner machen so mit nem toast oder so
+
+      alert(`${value}  ist schon vorhanden `);
+    }
+  }
   return (
     <Dialog>
       <form>
@@ -70,7 +83,9 @@ function BoardDialog({ handleAddBoard }: boardDialog) {
               }
             />
             <Button
-              onClick={() => handleAddBoard(value)}
+              onClick={() => {
+                handleCheckExist();
+              }}
               className=" p-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
             >
               Erstellen
