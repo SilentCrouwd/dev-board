@@ -79,7 +79,7 @@ function BoardDetail() {
               onChange={(e) => {
                 setValue(e.currentTarget.value);
               }}
-              id="fieldgroup-name"
+              id="fieldGroup-name"
               className="border border-primary max-w-full "
             />
           </Field>
@@ -90,6 +90,7 @@ function BoardDetail() {
               variant="outline"
               onClick={() => {
                 setEditMode(!editMode);
+                setValue(currentBoard[0].boardTitle);
               }}
               className="border-none order-1 hover:bg-primary-foreground hover:cursor-pointer"
             >

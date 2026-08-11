@@ -11,26 +11,33 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import BoardTask from "./BoardTask";
 
+function getIdFromDraggedItem(dataTransfer: DataTransfer): string | null {
+  let column: string | null = null;
+  dataTransfer.types.forEach((type) => {
+    if (type.startsWith("id-")) {
+      column = type.replace("id-", "");
+    }
+  });
+  return column;
+}
 function BoardDetailCard({
   cardTitle,
   statusValue,
   task,
 }: Readonly<DetailCardProps>) {
-  function filterColumns(taskStatus: string) {
-    const filteredTask = task.filter(
-      (currTask) => currTask.taskStatus === taskStatus,
-    );
-    return filteredTask;
-  }
+  const filterColumns = task.filter(
+    (currTask) => currTask.taskStatus === cardTitle,
+  );
+
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   function isIdInTasks(id: string) {
-    return task.some((task) => task.taskId === id);
+    return filterColumns.some((task) => String(task.taskStatus) === cardTitle);
   }
   function handleDragHover(event: React.DragEvent<HTMLDivElement>) {
-    const taskId = event.dataTransfer.getData("taskId");
     event.preventDefault();
+    const id = getIdFromDraggedItem(event.dataTransfer) ?? "";
 
-    if (isIdInTasks(String(taskId))) {
+    if (isIdInTasks(id)) {
       setIsDraggingOver(false);
     } else {
       setIsDraggingOver(true);
@@ -39,12 +46,12 @@ function BoardDetailCard({
 
   // muss noch umgebaut werden auf Namen der Spalte
   function handleDrop(event: React.DragEvent<HTMLDivElement>) {
-    const taskId = event.dataTransfer.getData("taskId");
-    console.log(taskId);
-    if (isIdInTasks(taskId)) {
+    const id = getIdFromDraggedItem(event.dataTransfer) ?? "";
+
+    if (isIdInTasks(id)) {
       setIsDraggingOver(false);
     } else {
-      setIsDraggingOver(false);
+      //Placehodler
     }
   }
   function handleLeave(event: React.DragEvent<HTMLDivElement>) {
@@ -54,12 +61,13 @@ function BoardDetailCard({
       setIsDraggingOver(false);
     }
   }
+
   return (
     <Card
       className={`border gap-0 bg-transparent ${isDraggingOver && "border-blue-500"} `}
       onDrop={handleDrop}
-      onDragEnter={() => setIsDraggingOver(true)}
-      onDragLeave={handleLeave}
+      onDragEnter={handleDragHover}
+      onDragLeave={() => setIsDraggingOver(false)}
       onDragOver={handleDragHover}
       onDragEnd={() => setIsDraggingOver(false)}
     >
@@ -81,10 +89,11 @@ function BoardDetailCard({
         >
           hier ablegen
         </div>
-        {filterColumns(cardTitle).map((currTask) => {
+        {filterColumns.map((currTask) => {
           return (
             <BoardTask
               key={currTask.taskId}
+              taskId={currTask.taskId}
               taskDescription={currTask.taskDescription}
               taskTitle={currTask.taskTitle}
               taskStatus={currTask.taskStatus}

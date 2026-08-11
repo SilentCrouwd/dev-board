@@ -82,14 +82,18 @@ function BoardDialog() {
                 </Button>
               }
             />
-            <Button
-              onClick={() => {
-                handleCheckExist();
-              }}
-              className=" p-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
-            >
-              Erstellen
-            </Button>
+            <DialogClose
+              render={
+                <Button
+                  onClick={() => {
+                    handleCheckExist();
+                  }}
+                  className=" p-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
+                >
+                  Erstellen
+                </Button>
+              }
+            />
           </DialogFooter>
         </DialogContent>
       </form>

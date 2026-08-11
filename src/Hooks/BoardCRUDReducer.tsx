@@ -19,7 +19,14 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
           {
             boardTitle: action.payload,
             boardId: Date.now(),
-            task: [],
+            task: [
+              {
+                taskTitle: "test",
+                taskDescription: "test",
+                taskId: Date.now(),
+                taskStatus: "todo",
+              },
+            ],
           },
         ],
       };

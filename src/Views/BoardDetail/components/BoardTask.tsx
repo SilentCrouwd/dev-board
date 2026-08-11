@@ -2,13 +2,13 @@ import { Button } from "@/components/ui/button";
 import type { BoardTaskProps } from "@/types/boardType";
 import { GripVertical, Trash2 } from "lucide-react";
 
-function BoardTask({ taskTitle, taskDescription, taskId }: BoardTaskProps) {
+function BoardTask({ taskTitle, taskDescription, taskStatus }: BoardTaskProps) {
   return (
     <div
       className=" w-full border rounded-md p-5 bg-card  cursor-grab"
       draggable="true"
       onDragStart={(e) => {
-        e.dataTransfer.setData("taskId", String(taskId));
+        e.dataTransfer.setData(`id-${taskStatus}`, "");
       }}
     >
       <div className="grid grid-cols-[1fr_8fr_1fr] items-center  ">
