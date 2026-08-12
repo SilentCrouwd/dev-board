@@ -11,7 +11,7 @@ import { setToAPI } from "@/Hooks/StorageAPI";
 function BoardDetail() {
   const { state, dispatch } = useBoardContext();
   const { id } = useParams();
-  const currentBoard = state?.Boards?.filter((b) => b.boardId === Number(id));
+  const currentBoard = state?.Boards?.filter((b) => b.boardId === id);
   const [editMode, setEditMode] = useState(false);
 
   if (!currentBoard) {
@@ -102,7 +102,7 @@ function BoardDetail() {
               onClick={() => {
                 dispatch({
                   type: "UPDATE",
-                  payload: { id: Number(id), value: value },
+                  payload: { id: String(id), value: value },
                 });
 
                 setEditMode(!editMode);

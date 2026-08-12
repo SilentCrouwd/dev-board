@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -7,9 +6,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { DetailCardProps } from "@/types/boardType";
-import { Plus } from "lucide-react";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import BoardTask from "./BoardTask";
+import BoardDetailDialog from "./BoardDetailDialog";
+import { useBoardContext } from "@/Context/BoardContext";
+import type { Task } from "@/Hooks/BoardCRUDReducer";
+import { setToAPI } from "@/Hooks/StorageAPI";
 
 function getIdFromDraggedItem(dataTransfer: DataTransfer): string | null {
   let column: string | null = null;
@@ -25,19 +28,21 @@ function BoardDetailCard({
   statusValue,
   task,
 }: Readonly<DetailCardProps>) {
+  const BoardContext = useBoardContext();
+
   const filterColumns = task.filter(
     (currTask) => currTask.taskStatus === cardTitle,
   );
 
   const [isDraggingOver, setIsDraggingOver] = useState(false);
-  function isIdInTasks(id: string) {
-    return filterColumns.some((task) => String(task.taskStatus) === cardTitle);
+  function isIdInTasks(column: string) {
+    return filterColumns.some((task) => String(task.taskStatus) === column);
   }
   function handleDragHover(event: React.DragEvent<HTMLDivElement>) {
     event.preventDefault();
-    const id = getIdFromDraggedItem(event.dataTransfer) ?? "";
+    const column = getIdFromDraggedItem(event.dataTransfer) ?? "";
 
-    if (isIdInTasks(id)) {
+    if (isIdInTasks(column)) {
       setIsDraggingOver(false);
     } else {
       setIsDraggingOver(true);
@@ -46,9 +51,9 @@ function BoardDetailCard({
 
   // muss noch umgebaut werden auf Namen der Spalte
   function handleDrop(event: React.DragEvent<HTMLDivElement>) {
-    const id = getIdFromDraggedItem(event.dataTransfer) ?? "";
+    const column = getIdFromDraggedItem(event.dataTransfer) ?? "";
 
-    if (isIdInTasks(id)) {
+    if (isIdInTasks(column)) {
       setIsDraggingOver(false);
     } else {
       //Placehodler
@@ -61,6 +66,16 @@ function BoardDetailCard({
       setIsDraggingOver(false);
     }
   }
+
+  function handleAddTask(currTask: Task, id: string) {
+    BoardContext.dispatch({
+      type: "ADD_TASK",
+      payload: { task: currTask, boardId: id },
+    });
+  }
+  useEffect(() => {
+    setToAPI(BoardContext.state);
+  }, [BoardContext.state]);
 
   return (
     <Card
@@ -77,9 +92,7 @@ function BoardDetailCard({
           <span className="text-xs text-muted"> {statusValue ?? 0}</span>
         </CardTitle>
         <CardAction>
-          <Button className="bg-transparent text-main hover:cursor-pointer">
-            <Plus />
-          </Button>
+          <BoardDetailDialog handleAddTask={handleAddTask} />
         </CardAction>
       </CardHeader>
       <CardFooter className="bg-transparent flex flex-col justify-center items-center min-h-25 gap-5 relative">

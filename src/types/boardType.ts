@@ -13,7 +13,7 @@ export interface BoardTaskProps {
 export interface BoardCardProps {
   boardTitle: string;
   taskValue: string | number;
-  boardId: number;
+  boardId: string;
 }
 export interface DetailCardProps {
   cardTitle: "todo" | "inProgress" | "Done";

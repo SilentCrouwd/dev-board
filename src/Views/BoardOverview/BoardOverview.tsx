@@ -24,7 +24,7 @@ function BoardOverview() {
                   key={currBoard.boardId}
                   boardTitle={currBoard.boardTitle}
                   taskValue={currBoard.task?.length ?? 0}
-                  boardId={Number(currBoard.boardId)}
+                  boardId={String(currBoard.boardId)}
                 />
               );
             })}

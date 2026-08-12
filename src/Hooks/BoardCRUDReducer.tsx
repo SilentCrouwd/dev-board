@@ -1,13 +1,27 @@
-import type { BoardType } from "@/types/boardType";
+import type { BoardTaskProps, BoardType } from "@/types/boardType";
 
 export interface BoardState {
   Boards: BoardType[];
+}
+export interface TaskState {
+  Task: BoardTaskProps[];
+}
+
+export interface Task {
+  taskTitle: string;
+  taskDescription: string;
+  taskId: string | number;
+  taskStatus: "todo" | "inProgress" | "Done";
 }
 
 export type BoardAction =
   | { type: "ADD"; payload: string }
   | { type: "DEL"; payload: string | number }
-  | { type: "UPDATE"; payload: { id: number; value: string } };
+  | { type: "UPDATE"; payload: { id: string; value: string } }
+  | {
+      type: "ADD_TASK";
+      payload: { boardId: string; task: Task };
+    };
 
 export function BoardCRUD(state: BoardState, action: BoardAction) {
   switch (action.type) {
@@ -18,15 +32,8 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
           ...state.Boards,
           {
             boardTitle: action.payload,
-            boardId: Date.now(),
-            task: [
-              {
-                taskTitle: "test",
-                taskDescription: "test",
-                taskId: Date.now(),
-                taskStatus: "todo",
-              },
-            ],
+            boardId: String(Date.now()),
+            task: [],
           },
         ],
       };
@@ -44,6 +51,16 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
         Boards: state.Boards.map((board) =>
           board.boardId === action.payload.id
             ? { ...board, boardTitle: action.payload.value }
+            : board,
+        ),
+      };
+
+    case "ADD_TASK":
+      return {
+        ...state,
+        Boards: state.Boards.map((board) =>
+          board.boardId === action.payload.boardId
+            ? { ...board, task: [...board.task, action.payload.task] }
             : board,
         ),
       };

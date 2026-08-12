@@ -74,7 +74,6 @@ function BoardDialog() {
             <DialogClose
               render={
                 <Button
-                  // disabled={}
                   className="p-5 rounded-sm border border-primary hover:cursor-pointer hover:bg-primary-foreground"
                   variant="outline"
                 >
@@ -85,8 +84,10 @@ function BoardDialog() {
             <DialogClose
               render={
                 <Button
+                  disabled={!value}
                   onClick={() => {
                     handleCheckExist();
+                    setValue("");
                   }}
                   className=" p-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
                 >
