@@ -36,7 +36,7 @@ function BoardDetailCard({
 
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   function isIdInTasks(column: string) {
-    return filterColumns.some((task) => String(task.taskStatus) === column);
+    return column === cardTitle;
   }
   function handleDragHover(event: React.DragEvent<HTMLDivElement>) {
     event.preventDefault();
