@@ -13,6 +13,7 @@ import BoardDetailDialog from "./BoardDetailDialog";
 import { useBoardContext } from "@/Context/BoardContext";
 import type { Task } from "@/Hooks/BoardCRUDReducer";
 import { setToAPI } from "@/Hooks/StorageAPI";
+import { useParams } from "react-router-dom";
 
 function getIdFromDraggedItem(dataTransfer: DataTransfer): string | null {
   let column: string | null = null;
@@ -23,13 +24,14 @@ function getIdFromDraggedItem(dataTransfer: DataTransfer): string | null {
   });
   return column;
 }
+
 function BoardDetailCard({
   cardTitle,
   statusValue,
   task,
 }: Readonly<DetailCardProps>) {
   const BoardContext = useBoardContext();
-
+  const { id } = useParams();
   const filterColumns = task.filter(
     (currTask) => currTask.taskStatus === cardTitle,
   );
@@ -77,6 +79,14 @@ function BoardDetailCard({
     setToAPI(BoardContext.state);
   }, [BoardContext.state]);
 
+  function handleDelTask(taskId: string) {
+    if (id) {
+      BoardContext.dispatch({
+        type: "DEL_TASK",
+        payload: { boardId: id, taskId },
+      });
+    }
+  }
   return (
     <Card
       className={`border gap-0 bg-transparent ${isDraggingOver && "border-blue-500"} `}
@@ -92,7 +102,10 @@ function BoardDetailCard({
           <span className="text-xs text-muted"> {statusValue ?? 0}</span>
         </CardTitle>
         <CardAction>
-          <BoardDetailDialog handleAddTask={handleAddTask} />
+          <BoardDetailDialog
+            handleAddTask={handleAddTask}
+            taskStatus={cardTitle}
+          />
         </CardAction>
       </CardHeader>
       <CardFooter className="bg-transparent flex flex-col justify-center items-center min-h-25 gap-5 relative">
@@ -106,10 +119,8 @@ function BoardDetailCard({
           return (
             <BoardTask
               key={currTask.taskId}
-              taskId={currTask.taskId}
-              taskDescription={currTask.taskDescription}
-              taskTitle={currTask.taskTitle}
-              taskStatus={currTask.taskStatus}
+              task={currTask}
+              handleDelTask={handleDelTask}
             />
           );
         })}

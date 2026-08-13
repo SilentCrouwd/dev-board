@@ -12,52 +12,40 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
-import { useState, type FormEvent } from "react";
-import { useParams } from "react-router-dom";
+import type { BoardTaskProps } from "@/types/boardType";
+import { useState } from "react";
 
-function BoardDetailDialog({ handleAddTask, taskStatus }: any) {
-  const { id } = useParams();
-  const [value, setValue] = useState("");
-  function handleOnSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-
-    const title = formData.get("taskTitle") as string;
-    const description = formData.get("taskDescription") as string;
-    const date = formData.get("taskDeadline") as string;
-    let germanDate = "";
-    if (date) {
-      const [year, month, day] = date.split("-");
-      germanDate = `${day}.${month}.${year}`;
-    }
-    const user = formData.get("taskUser") as string;
-
-    const newData = {
-      taskDeadline: germanDate,
-      taskDescription: description,
-      taskTitle: title,
-      taskId: Date.now(),
-      taskStatus: taskStatus,
-      taskUser: user,
-    };
-
-    handleAddTask(newData, id);
-    setValue("");
+interface TaskDialogProps {
+  currTask: BoardTaskProps;
+}
+function BoardTaskDialog({ currTask }: TaskDialogProps) {
+  const handleDate = currTask.taskDeadline;
+  let isoDate = "";
+  if (handleDate) {
+    const [day, month, year] = handleDate.split(".");
+    isoDate = `${year}-${month}-${day}`;
   }
+// Hier muss noch eine neue Dispatch  zum Updaten 
+//vielleicht kann man das hier einfacher machen mal schauen 
+  const [dateValue, setDateValue] = useState(isoDate);
+  const [titleValue, setTitleValue] = useState(currTask.taskTitle);
+  const [descValue, setDescValue] = useState(currTask.taskDescription);
+  const [userValue, setUserValue] = useState(currTask.taskUser);
 
   return (
     <Dialog>
       <DialogTrigger
         render={
-          <Button className="bg-transparent text-main hover:cursor-pointer">
-            <Plus />
+          <Button
+            variant="link"
+            className=" text-lg text-main hover:cursor-pointer"
+          >
+            {currTask.taskTitle}
           </Button>
         }
       />
       <DialogContent className="sm:max-w-sm">
-        <form onSubmit={handleOnSubmit}>
+        <form>
           <DialogHeader className="p-3">
             <DialogTitle>Neue Task erstellen</DialogTitle>
             <DialogDescription>
@@ -72,9 +60,9 @@ function BoardDetailDialog({ handleAddTask, taskStatus }: any) {
                 name="taskTitle"
                 placeholder="Task-Titel"
                 onChange={(e) => {
-                  setValue(e.currentTarget.value);
+                  setTitleValue(e.currentTarget.value);
                 }}
-                value={value}
+                value={titleValue}
               />
             </Field>
             <Field>
@@ -83,8 +71,12 @@ function BoardDetailDialog({ handleAddTask, taskStatus }: any) {
                 className=" w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40"
                 id="description"
                 name="taskDescription"
+                onChange={(e) => {
+                  setDescValue(e.currentTarget.value);
+                }}
+                value={descValue}
                 placeholder="Was soll erledigt Werden?"
-                rows={3}
+                rows={5}
               />
             </Field>
             <Field>
@@ -93,6 +85,10 @@ function BoardDetailDialog({ handleAddTask, taskStatus }: any) {
                 id="user"
                 name="taskUser"
                 className=" w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40"
+                onChange={(e) => {
+                  setUserValue(e.currentTarget.value);
+                }}
+                value={userValue}
               >
                 <option value="Niemand">Niemand</option>
                 <option value="Nutzer">Nutzer</option>
@@ -105,6 +101,10 @@ function BoardDetailDialog({ handleAddTask, taskStatus }: any) {
                 id="deadline"
                 name="taskDeadline"
                 type="date"
+                onChange={(e) => {
+                  setDateValue(e.currentTarget.value);
+                }}
+                value={dateValue}
               />
             </Field>
           </FieldGroup>
@@ -122,7 +122,6 @@ function BoardDetailDialog({ handleAddTask, taskStatus }: any) {
             <DialogClose
               render={
                 <Button
-                  disabled={!value}
                   type="submit"
                   className=" p-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
                 >
@@ -136,4 +135,5 @@ function BoardDetailDialog({ handleAddTask, taskStatus }: any) {
     </Dialog>
   );
 }
-export default BoardDetailDialog;
+
+export default BoardTaskDialog;

@@ -10,7 +10,7 @@ export interface TaskState {
 export interface Task {
   taskTitle: string;
   taskDescription: string;
-  taskId: string | number;
+  taskId: string;
   taskStatus: "todo" | "inProgress" | "Done";
 }
 
@@ -21,7 +21,8 @@ export type BoardAction =
   | {
       type: "ADD_TASK";
       payload: { boardId: string; task: Task };
-    };
+    }
+  | { type: "DEL_TASK"; payload: { boardId: string; taskId: string } };
 
 export function BoardCRUD(state: BoardState, action: BoardAction) {
   switch (action.type) {
@@ -64,7 +65,21 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
             : board,
         ),
       };
-
+    case "DEL_TASK":
+      return {
+        ...state,
+        Boards: state.Boards.map((board) =>
+          board.boardId === action.payload.boardId
+            ? {
+                ...board,
+                task: board.task.filter(
+                  (t) => t.taskId !== action.payload.taskId,
+                ),
+              }
+            : board,
+        ),
+      };
+    // UPDATE_TASK
     default:
       return state;
   }
