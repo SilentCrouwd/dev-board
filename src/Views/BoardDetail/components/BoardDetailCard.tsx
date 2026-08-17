@@ -28,11 +28,11 @@ function getIdFromDraggedItem(dataTransfer: DataTransfer): string | null {
 function BoardDetailCard({
   cardTitle,
   statusValue,
-  task,
+  board,
 }: Readonly<DetailCardProps>) {
   const BoardContext = useBoardContext();
   const { id } = useParams();
-  const filterColumns = task.filter(
+  const filterColumns = board.task.filter(
     (currTask) => currTask.taskStatus === cardTitle,
   );
 
@@ -51,7 +51,6 @@ function BoardDetailCard({
     }
   }
 
-  // muss noch umgebaut werden auf Namen der Spalte
   function handleDrop(event: React.DragEvent<HTMLDivElement>) {
     const column = getIdFromDraggedItem(event.dataTransfer) ?? "";
 
@@ -119,8 +118,9 @@ function BoardDetailCard({
           return (
             <BoardTask
               key={currTask.taskId}
-              task={currTask}
+              currTaskId={currTask.taskId}
               handleDelTask={handleDelTask}
+              currBoardId={String(id)}
             />
           );
         })}

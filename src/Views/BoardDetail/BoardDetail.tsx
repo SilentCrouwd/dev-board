@@ -11,7 +11,7 @@ import { setToAPI } from "@/Hooks/StorageAPI";
 function BoardDetail() {
   const { state, dispatch } = useBoardContext();
   const { id } = useParams();
-  const currentBoard = state?.Boards?.filter((b) => b.boardId === id);
+  const currentBoard = state?.Boards?.find((b) => b.boardId === id);
   const [editMode, setEditMode] = useState(false);
 
   if (!currentBoard) {
@@ -20,7 +20,7 @@ function BoardDetail() {
   useEffect(() => {
     setToAPI(state);
   }, [state]);
-  const [value, setValue] = useState(currentBoard[0].boardTitle);
+  const [value, setValue] = useState(currentBoard.boardTitle);
 
   function renderBoardDetailContent() {
     return (
@@ -36,7 +36,7 @@ function BoardDetail() {
             </Button>
           </Link>
 
-          <p className="font-bold text-xl">{currentBoard[0].boardTitle}</p>
+          <p className="font-bold text-xl">{currentBoard?.boardTitle}</p>
 
           <Button
             variant="ghost"
@@ -49,14 +49,13 @@ function BoardDetail() {
             <Pencil />
           </Button>
         </div>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10">
-          <BoardDetailCard cardTitle={"todo"} task={currentBoard[0].task} />
-          <BoardDetailCard
-            cardTitle={"inProgress"}
-            task={currentBoard[0].task}
-          />
-          <BoardDetailCard cardTitle={"Done"} task={currentBoard[0].task} />
-        </div>
+        {currentBoard && (
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10">
+            <BoardDetailCard cardTitle={"todo"} board={currentBoard} />
+            <BoardDetailCard cardTitle={"inProgress"} board={currentBoard} />
+            <BoardDetailCard cardTitle={"Done"} board={currentBoard} />
+          </div>
+        )}
       </div>
     );
   }
@@ -90,7 +89,9 @@ function BoardDetail() {
               variant="outline"
               onClick={() => {
                 setEditMode(!editMode);
-                setValue(currentBoard[0].boardTitle);
+                if (currentBoard) {
+                  setValue(currentBoard.boardTitle);
+                }
               }}
               className="border-none order-1 hover:bg-primary-foreground hover:cursor-pointer"
             >

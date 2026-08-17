@@ -20,7 +20,7 @@ export interface BoardCardProps {
 export interface DetailCardProps {
   cardTitle: "todo" | "inProgress" | "Done";
   statusValue?: number;
-  task: BoardTaskProps[];
+  board: BoardType;
 }
 
 export interface User {

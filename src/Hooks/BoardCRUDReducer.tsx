@@ -22,7 +22,20 @@ export type BoardAction =
       type: "ADD_TASK";
       payload: { boardId: string; task: Task };
     }
-  | { type: "DEL_TASK"; payload: { boardId: string; taskId: string } };
+  | { type: "DEL_TASK"; payload: { boardId: string; taskId: string } }
+  | {
+      type: "UPDATE_TASK";
+      payload: {
+        boardId: string;
+        taskId: string;
+        updatedObj: {
+          taskTitle: string;
+          taskDescription: string;
+          taskDeadline: string;
+          taskUser: string;
+        };
+      };
+    };
 
 export function BoardCRUD(state: BoardState, action: BoardAction) {
   switch (action.type) {
@@ -79,7 +92,30 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
             : board,
         ),
       };
-    // UPDATE_TASK
+
+
+    case "UPDATE_TASK":
+      return {
+        ...state,
+
+        Boards: state.Boards.map((boards) =>
+          boards.boardId === action.payload.boardId
+            ? {
+                ...boards,
+
+                task: boards.task.map((task) =>
+                  task.taskId === action.payload.taskId
+                    ? {
+                        ...task,
+
+                        ...action.payload.updatedObj,
+                      }
+                    : task,
+                ),
+              }
+            : boards,
+        ),
+      };
     default:
       return state;
   }

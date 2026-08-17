@@ -19,6 +19,7 @@ import { useParams } from "react-router-dom";
 function BoardDetailDialog({ handleAddTask, taskStatus }: any) {
   const { id } = useParams();
   const [value, setValue] = useState("");
+
   function handleOnSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 

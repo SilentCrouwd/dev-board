@@ -13,24 +13,48 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { BoardTaskProps } from "@/types/boardType";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { UpdateTask } from "./BoardTask";
 
 interface TaskDialogProps {
   currTask: BoardTaskProps;
+  handleUpdate: (updatedObj: UpdateTask) => void;
 }
-function BoardTaskDialog({ currTask }: TaskDialogProps) {
+function BoardTaskDialog({ currTask, handleUpdate }: TaskDialogProps) {
   const handleDate = currTask.taskDeadline;
   let isoDate = "";
   if (handleDate) {
     const [day, month, year] = handleDate.split(".");
     isoDate = `${year}-${month}-${day}`;
   }
-// Hier muss noch eine neue Dispatch  zum Updaten 
-//vielleicht kann man das hier einfacher machen mal schauen 
+
   const [dateValue, setDateValue] = useState(isoDate);
   const [titleValue, setTitleValue] = useState(currTask.taskTitle);
   const [descValue, setDescValue] = useState(currTask.taskDescription);
   const [userValue, setUserValue] = useState(currTask.taskUser);
+
+  useEffect(() => {
+    setDateValue(isoDate);
+    setTitleValue(currTask.taskTitle);
+    setDescValue(currTask.taskDescription);
+    setUserValue(currTask.taskUser);
+  }, [currTask]);
+
+  function handleAddUpdatedTask(e: React.FormEvent) {
+    e.preventDefault();
+    let germanDate = "";
+    if (dateValue) {
+      const [year, month, day] = dateValue.split("-");
+      germanDate = `${day}.${month}.${year}`;
+    }
+    const updatedTask = {
+      taskTitle: titleValue,
+      taskDescription: descValue,
+      taskDeadline: germanDate,
+      taskUser: userValue,
+    };
+    handleUpdate(updatedTask);
+  }
 
   return (
     <Dialog>
@@ -45,7 +69,11 @@ function BoardTaskDialog({ currTask }: TaskDialogProps) {
         }
       />
       <DialogContent className="sm:max-w-sm">
-        <form>
+        <form
+          onSubmit={(e) => {
+            handleAddUpdatedTask(e);
+          }}
+        >
           <DialogHeader className="p-3">
             <DialogTitle>Neue Task erstellen</DialogTitle>
             <DialogDescription>
@@ -107,8 +135,6 @@ function BoardTaskDialog({ currTask }: TaskDialogProps) {
                 value={dateValue}
               />
             </Field>
-          </FieldGroup>
-          <DialogFooter className="bg-background border-none">
             <DialogClose
               render={
                 <Button
@@ -129,7 +155,8 @@ function BoardTaskDialog({ currTask }: TaskDialogProps) {
                 </Button>
               }
             />
-          </DialogFooter>
+          </FieldGroup>
+          <DialogFooter className="bg-background border-none"></DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
