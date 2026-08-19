@@ -3,8 +3,14 @@ import {
   type BoardAction,
   type BoardState,
 } from "@/Hooks/BoardCRUDReducer";
-import { getFromAPI } from "@/Hooks/StorageAPI";
-import { createContext, useContext, useReducer, type ReactNode } from "react"; // 👈 useContext & ReactNode hinzugefügt
+import { getFromAPI, setToAPI } from "@/Hooks/StorageAPI";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  type ReactNode,
+} from "react"; // 👈 useContext & ReactNode hinzugefügt
 
 export interface BoardContextType {
   state: BoardState;
@@ -19,6 +25,10 @@ const BoardContext = createContext<BoardContextType | undefined>(undefined);
 
 export const BoardProvider = ({ children }: BoardProviderProps) => {
   const [state, dispatch] = useReducer(BoardCRUD, getFromAPI());
+
+  useEffect(() => {
+    setToAPI(state);
+  }, [state]);
 
   return (
     <BoardContext.Provider value={{ state, dispatch }}>

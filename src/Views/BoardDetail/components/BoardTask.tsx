@@ -5,9 +5,6 @@ import BoardTaskDialog from "./BoardTaskDialog";
 
 import { useBoardContext } from "@/Context/BoardContext";
 
-import { useEffect } from "react";
-import { setToAPI } from "@/Hooks/StorageAPI";
-
 interface BoardTask {
   currBoardId: string;
   currTaskId: string;
@@ -39,9 +36,6 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
       },
     });
   }
-  useEffect(() => {
-    setToAPI(BoardContext.state);
-  }, [BoardContext.state]);
 
   if (!BoardContext.state) {
     return <div>KeinText</div>;

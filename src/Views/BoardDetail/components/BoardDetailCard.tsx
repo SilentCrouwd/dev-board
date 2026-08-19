@@ -5,14 +5,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { DetailCardProps, Task } from "@/types/boardType";
+import type { BoardType, Task } from "@/types/boardType";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import BoardTask from "./BoardTask";
 import BoardDetailDialog from "./BoardDetailDialog";
 import { useBoardContext } from "@/Context/BoardContext";
 
-import { setToAPI } from "@/Hooks/StorageAPI";
 import { useParams } from "react-router-dom";
 
 function getIdFromDraggedItem(
@@ -27,22 +26,29 @@ function getIdFromDraggedItem(
   });
   return taskId;
 }
-
-function BoardDetailCard({ cardTitle, board }: Readonly<DetailCardProps>) {
+export interface DetailCardProps {
+  columnTitle: "ToDo" | "inProgress" | "Done";
+  statusValue?: number;
+  board: BoardType;
+}
+function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
   const BoardContext = useBoardContext();
-  const { id } = useParams();
 
+  const { id } = useParams();
+  // set currBoard
   const currentBoard =
     BoardContext.state.Boards.find((b) => b.boardId === id) ?? board;
 
+  //  check is taskStatus = column name
   const filterColumns = currentBoard.task.filter(
-    (currTask) => currTask.taskStatus === cardTitle,
+    (currTask) => currTask.taskStatus === columnTitle,
   );
 
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
+  // check is dragged Task Status = columnName
   function isColumInTask(startColumn: string) {
-    const isStartColumn = startColumn !== cardTitle.toLowerCase();
+    const isStartColumn = startColumn !== columnTitle.toLowerCase();
 
     return isStartColumn;
   }
@@ -50,9 +56,9 @@ function BoardDetailCard({ cardTitle, board }: Readonly<DetailCardProps>) {
     event.preventDefault();
     event.stopPropagation();
 
-    const dragedColumn = getIdFromDraggedItem(event.dataTransfer, "title");
-    if (dragedColumn) {
-      setIsDraggingOver(isColumInTask(dragedColumn));
+    const draggedColumn = getIdFromDraggedItem(event.dataTransfer, "title");
+    if (draggedColumn) {
+      setIsDraggingOver(isColumInTask(draggedColumn));
     }
   }
 
@@ -66,7 +72,11 @@ function BoardDetailCard({ cardTitle, board }: Readonly<DetailCardProps>) {
     if (id && taskId) {
       BoardContext.dispatch({
         type: "UPDATE_TASK_STATUS",
-        payload: { boardId: id, taskId: String(taskId), columnName: cardTitle },
+        payload: {
+          boardId: id,
+          taskId: String(taskId),
+          columnName: columnTitle,
+        },
       });
     }
   }
@@ -77,10 +87,6 @@ function BoardDetailCard({ cardTitle, board }: Readonly<DetailCardProps>) {
       payload: { task: currTask, boardId: id },
     });
   }
-
-  useEffect(() => {
-    setToAPI(BoardContext.state);
-  }, [BoardContext.state]);
 
   function handleDelTask(taskId: string) {
     if (id) {
@@ -102,14 +108,14 @@ function BoardDetailCard({ cardTitle, board }: Readonly<DetailCardProps>) {
     >
       <CardHeader className="items-center justify-between flex">
         <CardTitle>
-          {cardTitle}
+          {columnTitle}
           <span className="text-xs text-muted"> {filterColumns.length}</span>
         </CardTitle>
         <CardAction>
           <BoardDetailDialog
             handleAddTask={handleAddTask}
-            taskStatus={cardTitle}
-            currUser={BoardContext.state.User.Username || "Nutzer"}
+            taskStatus={columnTitle}
+            currUser={BoardContext?.state?.User?.Username || "Nutzer"}
           />
         </CardAction>
       </CardHeader>

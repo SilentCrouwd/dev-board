@@ -1,14 +1,9 @@
-import { useEffect } from "react";
 import BoardCard from "./components/BoardCard";
 import BoardDialog from "./components/BoardDialog";
-import { setToAPI } from "@/Hooks/StorageAPI";
+
 import { useBoardContext } from "@/Context/BoardContext";
 function BoardOverview() {
   const BoardContext = useBoardContext();
-
-  useEffect(() => {
-    setToAPI(BoardContext.state);
-  }, [BoardContext.state]);
 
   return (
     <div className="flex flex-col  ">

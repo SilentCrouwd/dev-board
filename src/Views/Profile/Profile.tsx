@@ -10,17 +10,22 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useBoardContext } from "@/Context/BoardContext";
-import { setToAPI } from "@/Hooks/StorageAPI";
 import { useEffect, useState } from "react";
 
 function Profile() {
   const [userName, setUserName] = useState("");
-  const { state, dispatch } = useBoardContext();
+  const BoardContext = useBoardContext();
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
-    setToAPI(state);
-  }, [state]);
+    if (!isSaved) return;
 
+    const timer = setTimeout(() => {
+      setIsSaved(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [isSaved]);
   return (
     <div className="flex flex-col p-5 max-w-md  sm:mx-auto mt-2">
       <p className=" font-bold text-2xl">Profil</p>
@@ -44,16 +49,19 @@ function Profile() {
               }}
             />
           </Field>
-          <Button
-            className="text-sm mt-5 px-4 py-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
-            type="submit"
-            onClick={() => {
-              dispatch({ type: "ADD_USER", payload: userName });
-              setUserName("");
-            }}
-          >
-            Speichern
-          </Button>
+          <div className=" flex items-center mt-5 px-4 py-5 gap-3">
+            <Button
+              className="text-sm  rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
+              onClick={() => {
+                BoardContext.dispatch({ type: "ADD_USER", payload: userName });
+                setUserName("");
+                setIsSaved(true);
+              }}
+            >
+              Speichern
+            </Button>
+            {isSaved && <p className="text-green-600">Saved !!!</p>}{" "}
+          </div>
         </CardContent>
       </Card>
     </div>

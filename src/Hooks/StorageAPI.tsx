@@ -8,6 +8,8 @@ export function setToAPI(board: BoardState) {
 
 export function getFromAPI() {
   const savedBoards = localStorage.getItem(LOCAL_STORAGE_KEY);
-  const parsedBoards = savedBoards ? JSON.parse(savedBoards) : { Boards: [] };
+  const parsedBoards = savedBoards
+    ? JSON.parse(savedBoards)
+    : { Boards: [], User: { Username: "Nutzer", UserId: String(Date.now()) } };
   return parsedBoards;
 }

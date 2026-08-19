@@ -12,13 +12,3 @@ export interface Task {
   taskDeadline: string;
   taskUser: string;
 }
-export interface BoardCardProps {
-  boardTitle: string;
-  taskValue: string | number;
-  boardId: string;
-}
-export interface DetailCardProps {
-  cardTitle: "ToDo" | "inProgress" | "Done";
-  statusValue?: number;
-  board: BoardType;
-}

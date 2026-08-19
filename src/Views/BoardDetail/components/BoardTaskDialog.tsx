@@ -26,7 +26,7 @@ function BoardTaskDialog({
   currTask,
   handleUpdate,
   currUser,
-}: TaskDialogProps) {
+}: Readonly<TaskDialogProps>) {
   const handleDate = currTask.taskDeadline;
   let isoDate = "";
   if (handleDate) {
@@ -125,7 +125,7 @@ function BoardTaskDialog({
                 value={userValue}
               >
                 <option value="Niemand">Niemand</option>
-                <option value={`${currUser}`}>{currUser}</option>
+                {currUser && <option value={`${currUser}`}>{currUser}</option>}
               </select>
             </Field>
             <Field>

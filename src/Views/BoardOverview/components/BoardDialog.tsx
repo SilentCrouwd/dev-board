@@ -27,11 +27,10 @@ function BoardDialog() {
     const exist = currList.Boards.find(
       (board: BoardType) => board.boardTitle === value,
     );
+
     if (!exist) {
       BoardContext.dispatch({ type: "ADD", payload: value });
     } else {
-      // Bitte noch schöner machen so mit nem toast oder so
-
       alert(`${value}  ist schon vorhanden `);
     }
   }

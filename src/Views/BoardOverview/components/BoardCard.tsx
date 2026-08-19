@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import type { BoardCardProps } from "../../../types/boardType";
+
 import {
   Card,
   CardAction,
@@ -11,7 +11,11 @@ import {
 import { Trash2 } from "lucide-react";
 import { useBoardContext } from "@/Context/BoardContext";
 import { useState } from "react";
-
+export interface BoardCardProps {
+  boardTitle: string;
+  taskValue: string | number;
+  boardId: string;
+}
 function BoardCard({
   boardTitle,
   taskValue,
