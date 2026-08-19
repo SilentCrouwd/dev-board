@@ -28,19 +28,20 @@ function Profile() {
     return () => clearTimeout(timer);
   }, [isSaved]);
   return (
-    <div className="flex flex-col p-5 max-w-md  sm:mx-auto mt-2">
+    <div className="flex flex-col  max-w-md  sm:mx-auto mt-2">
       <p className=" font-bold text-2xl">Profil</p>
       <Card className="w-full h-fit mt-5 border   bg-img-gradient">
-        <CardHeader className=" my-5 px-3  ">
-          <CardTitle className="text-lg text-card-foreground py-3">
-            Benutzername Ändern
-          </CardTitle>
-          <CardDescription>
-            Ändere deinen Anzeigenamen für das Board.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="border-t  px-3">
-          <Field className="mt-5 text-popover-foreground">
+        <CardContent className="px-2">
+          <CardHeader className=" my-5   ">
+            <CardTitle className="text-lg text-card-foreground py-3 ">
+              Benutzername Ändern
+            </CardTitle>
+            <CardDescription>
+              Ändere deinen Anzeigenamen für das Board.
+            </CardDescription>
+          </CardHeader>
+
+          <Field className="mt-5 text-popover-foreground px-3">
             <FieldLabel htmlFor="input-field-username">Name</FieldLabel>
             <Input
               id="input-field-username"
