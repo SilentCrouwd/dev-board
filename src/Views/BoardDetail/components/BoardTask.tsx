@@ -45,7 +45,7 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
     }
     return (
       <div
-        className=" w-full border rounded-md p-5 bg-card  cursor-grab"
+        className=" w-full border rounded-md p-5 bg-img-gradient  cursor-grab"
         draggable="true"
         onDragStart={(e) => {
           e.dataTransfer.setData(`id-${currTask ? currTask.taskId : ""}`, "");

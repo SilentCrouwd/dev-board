@@ -24,7 +24,7 @@ function BoardCard({
   const BoardContext = useBoardContext();
   const [toggleDELContext, setToggleDELContext] = useState(false);
   return (
-    <Card className="border overflow-visible">
+    <Card className="border overflow-visible bg-img-gradient">
       <CardHeader>
         <Link to={`/boards/${boardId}`}>
           <CardTitle className="hover:underline">{boardTitle}</CardTitle>

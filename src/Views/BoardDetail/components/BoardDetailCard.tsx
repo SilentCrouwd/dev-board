@@ -106,7 +106,7 @@ function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
       onDragOver={handleDragHover}
       onDragEnd={() => setIsDraggingOver(false)}
     >
-      <CardHeader className="items-center justify-between flex">
+      <CardHeader className="items-center justify-between flex bg-img-gradient">
         <CardTitle>
           {columnTitle}
           <span className="text-xs text-muted"> {filterColumns.length}</span>
@@ -133,6 +133,11 @@ function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
             currBoardId={String(id)}
           />
         ))}
+        {filterColumns.length === 0 ? (
+          <p className="text-popover-foreground">Keine Task vorhanden</p>
+        ) : (
+          ""
+        )}
       </CardFooter>
     </Card>
   );

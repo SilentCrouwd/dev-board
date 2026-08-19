@@ -29,15 +29,17 @@ function Profile() {
   return (
     <div className="flex flex-col p-5 max-w-md  sm:mx-auto mt-2">
       <p className=" font-bold text-2xl">Profil</p>
-      <Card className="w-full h-fit mt-5 border p-3">
-        <CardHeader>
-          <CardTitle className="text-lg">Benutzername Ändern</CardTitle>
+      <Card className="w-full h-fit mt-5 border px-3  bg-background ">
+        <CardHeader className="bg-img-gradient my-5  ">
+          <CardTitle className="text-lg text-card-foreground py-3">
+            Benutzername Ändern
+          </CardTitle>
           <CardDescription>
             Ändere deinen Anzeigenamen für das Board.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Field>
+        <CardContent className="border-t ">
+          <Field className="mt-5 text-popover-foreground">
             <FieldLabel htmlFor="input-field-username">Name</FieldLabel>
             <Input
               id="input-field-username"
