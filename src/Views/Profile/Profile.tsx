@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -29,8 +30,8 @@ function Profile() {
   return (
     <div className="flex flex-col p-5 max-w-md  sm:mx-auto mt-2">
       <p className=" font-bold text-2xl">Profil</p>
-      <Card className="w-full h-fit mt-5 border px-3  bg-background ">
-        <CardHeader className="bg-img-gradient my-5  ">
+      <Card className="w-full h-fit mt-5 border   bg-img-gradient">
+        <CardHeader className=" my-5 px-3  ">
           <CardTitle className="text-lg text-card-foreground py-3">
             Benutzername Ändern
           </CardTitle>
@@ -38,7 +39,7 @@ function Profile() {
             Ändere deinen Anzeigenamen für das Board.
           </CardDescription>
         </CardHeader>
-        <CardContent className="border-t ">
+        <CardContent className="border-t  px-3">
           <Field className="mt-5 text-popover-foreground">
             <FieldLabel htmlFor="input-field-username">Name</FieldLabel>
             <Input
@@ -51,7 +52,10 @@ function Profile() {
               }}
             />
           </Field>
-          <div className=" flex items-center mt-5 px-4 py-5 gap-3">
+        </CardContent>
+        <CardFooter className="bg-background">
+          <div className=" flex items-center  w-full justify-end  gap-3">
+            {isSaved && <p className="text-green-600">Saved !!!</p>}{" "}
             <Button
               className="text-sm  rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
               onClick={() => {
@@ -62,9 +66,8 @@ function Profile() {
             >
               Speichern
             </Button>
-            {isSaved && <p className="text-green-600">Saved !!!</p>}{" "}
           </div>
-        </CardContent>
+        </CardFooter>
       </Card>
     </div>
   );

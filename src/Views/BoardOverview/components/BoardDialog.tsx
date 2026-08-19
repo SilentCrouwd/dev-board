@@ -47,7 +47,7 @@ function BoardDialog() {
             </Button>
           }
         />
-        <DialogContent className=" max-w-135  sm:max-w-135 ">
+        <DialogContent className=" max-w-135  sm:max-w-135  bg-img-gradient border ">
           <DialogHeader className="text-center sm:text-start p-5 font-bold">
             <DialogTitle>Neues Board erstellen</DialogTitle>
             <DialogDescription className="text-center sm:text-start font-normal">
