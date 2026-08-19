@@ -1,17 +1,10 @@
-import type { BoardTaskProps, BoardType } from "@/types/boardType";
+import type { BoardType, Task } from "@/types/boardType";
 
 export interface BoardState {
   Boards: BoardType[];
 }
 export interface TaskState {
-  Task: BoardTaskProps[];
-}
-
-export interface Task {
-  taskTitle: string;
-  taskDescription: string;
-  taskId: string;
-  taskStatus: "todo" | "inProgress" | "Done";
+  Task: Task[];
 }
 
 export type BoardAction =
@@ -34,6 +27,14 @@ export type BoardAction =
           taskDeadline: string;
           taskUser: string;
         };
+      };
+    }
+  | {
+      type: "UPDATE_TASK_STATUS";
+      payload: {
+        boardId: string;
+        taskId: string;
+        columnName: string;
       };
     };
 
@@ -93,7 +94,6 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
         ),
       };
 
-
     case "UPDATE_TASK":
       return {
         ...state,
@@ -116,6 +116,38 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
             : boards,
         ),
       };
+    case "UPDATE_TASK_STATUS": {
+      const foundBoard = state.Boards.find(
+        (b) => b.boardId === action.payload.boardId,
+      );
+      const foundTask = foundBoard?.task.find(
+        (t) => t.taskId === action.payload.taskId,
+      );
+
+      console.log("UPDATE_TASK_STATUS CHECK:", {
+        payload: action.payload,
+        foundBoard: foundBoard ? foundBoard.boardId : "❌ BOARD NICHT GEFUNDEN",
+        foundTask: foundTask ? foundTask.taskId : "❌ TASK NICHT GEFUNDEN",
+        allBoardIds: state.Boards.map((b) => b.boardId),
+        allTaskIdsInBoard: foundBoard?.task.map((t) => t.taskId),
+      });
+
+      return {
+        ...state,
+        Boards: state.Boards.map((board) =>
+          board.boardId === action.payload.boardId
+            ? {
+                ...board,
+                task: board.task.map((task) =>
+                  task.taskId === action.payload.taskId
+                    ? { ...task, taskStatus: action.payload.columnName }
+                    : task,
+                ),
+              }
+            : board,
+        ),
+      };
+    }
     default:
       return state;
   }

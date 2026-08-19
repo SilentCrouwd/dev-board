@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import type { BoardTaskProps, BoardType } from "@/types/boardType";
 
 import { GripVertical, Trash2 } from "lucide-react";
 import BoardTaskDialog from "./BoardTaskDialog";
@@ -55,10 +54,7 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
         className=" w-full border rounded-md p-5 bg-card  cursor-grab"
         draggable="true"
         onDragStart={(e) => {
-          e.dataTransfer.setData(
-            `id-${currTask ? currTask.taskStatus : ""}`,
-            "",
-          );
+          e.dataTransfer.setData(`id-${currTask ? currTask.taskId : ""}`, "");
         }}
       >
         <div className="grid grid-cols-[1fr_8fr_1fr] items-center  ">

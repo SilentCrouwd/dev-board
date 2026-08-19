@@ -1,10 +1,10 @@
 export interface BoardType {
   boardTitle: string;
   boardId: string | number;
-  task: BoardTaskProps[];
+  task: Task[];
 }
 
-export interface BoardTaskProps {
+export interface Task {
   taskTitle: string;
   taskDescription: string;
   taskId: string;

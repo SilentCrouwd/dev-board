@@ -12,12 +12,13 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { BoardTaskProps } from "@/types/boardType";
+
 import { useEffect, useState } from "react";
 import type { UpdateTask } from "./BoardTask";
+import type { Task } from "@/types/boardType";
 
 interface TaskDialogProps {
-  currTask: BoardTaskProps;
+  currTask: Task;
   handleUpdate: (updatedObj: UpdateTask) => void;
 }
 function BoardTaskDialog({ currTask, handleUpdate }: TaskDialogProps) {

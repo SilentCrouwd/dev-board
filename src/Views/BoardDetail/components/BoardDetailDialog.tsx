@@ -39,7 +39,7 @@ function BoardDetailDialog({ handleAddTask, taskStatus }: any) {
       taskDeadline: germanDate,
       taskDescription: description,
       taskTitle: title,
-      taskId: Date.now(),
+      taskId: String(Date.now()),
       taskStatus: taskStatus,
       taskUser: user,
     };
