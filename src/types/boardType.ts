@@ -18,12 +18,7 @@ export interface BoardCardProps {
   boardId: string;
 }
 export interface DetailCardProps {
-  cardTitle: "todo" | "inProgress" | "Done";
+  cardTitle: "ToDo" | "inProgress" | "Done";
   statusValue?: number;
   board: BoardType;
-}
-
-export interface User {
-  userName: string;
-  board: BoardType[];
 }

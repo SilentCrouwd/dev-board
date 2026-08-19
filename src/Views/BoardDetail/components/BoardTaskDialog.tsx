@@ -19,9 +19,14 @@ import type { Task } from "@/types/boardType";
 
 interface TaskDialogProps {
   currTask: Task;
+  currUser: string;
   handleUpdate: (updatedObj: UpdateTask) => void;
 }
-function BoardTaskDialog({ currTask, handleUpdate }: TaskDialogProps) {
+function BoardTaskDialog({
+  currTask,
+  handleUpdate,
+  currUser,
+}: TaskDialogProps) {
   const handleDate = currTask.taskDeadline;
   let isoDate = "";
   if (handleDate) {
@@ -32,7 +37,7 @@ function BoardTaskDialog({ currTask, handleUpdate }: TaskDialogProps) {
   const [dateValue, setDateValue] = useState(isoDate);
   const [titleValue, setTitleValue] = useState(currTask.taskTitle);
   const [descValue, setDescValue] = useState(currTask.taskDescription);
-  const [userValue, setUserValue] = useState(currTask.taskUser);
+  const [userValue, setUserValue] = useState(currUser);
 
   useEffect(() => {
     setDateValue(isoDate);
@@ -120,7 +125,7 @@ function BoardTaskDialog({ currTask, handleUpdate }: TaskDialogProps) {
                 value={userValue}
               >
                 <option value="Niemand">Niemand</option>
-                <option value="Nutzer">Nutzer</option>
+                <option value={`${currUser}`}>{currUser}</option>
               </select>
             </Field>
             <Field>

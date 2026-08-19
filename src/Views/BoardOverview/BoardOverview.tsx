@@ -9,6 +9,7 @@ function BoardOverview() {
   useEffect(() => {
     setToAPI(BoardContext.state);
   }, [BoardContext.state]);
+
   return (
     <div className="flex flex-col  ">
       <div className="w-full flex justify-between items-center px-5 mt-5 lg:max-w-[1000px] mx-auto">

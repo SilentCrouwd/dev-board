@@ -1,10 +1,6 @@
-import type { BoardType } from "@/types/boardType";
+import type { BoardState } from "./BoardCRUDReducer";
 
 const LOCAL_STORAGE_KEY = "Boards";
-
-export interface BoardState {
-  Boards: BoardType[];
-}
 
 export function setToAPI(board: BoardState) {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(board));

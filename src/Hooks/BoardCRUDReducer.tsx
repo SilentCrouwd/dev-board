@@ -1,13 +1,17 @@
 import type { BoardType, Task } from "@/types/boardType";
 
 export interface BoardState {
+  User: {
+    Username: string;
+    UserId: string;
+  };
   Boards: BoardType[];
 }
 export interface TaskState {
   Task: Task[];
 }
-
 export type BoardAction =
+  | { type: "ADD_USER"; payload: string }
   | { type: "ADD"; payload: string }
   | { type: "DEL"; payload: string | number }
   | { type: "UPDATE"; payload: { id: string; value: string } }
@@ -48,6 +52,7 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
           {
             boardTitle: action.payload,
             boardId: String(Date.now()),
+            boardUser: "Nutzer",
             task: [],
           },
         ],
@@ -117,21 +122,6 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
         ),
       };
     case "UPDATE_TASK_STATUS": {
-      const foundBoard = state.Boards.find(
-        (b) => b.boardId === action.payload.boardId,
-      );
-      const foundTask = foundBoard?.task.find(
-        (t) => t.taskId === action.payload.taskId,
-      );
-
-      console.log("UPDATE_TASK_STATUS CHECK:", {
-        payload: action.payload,
-        foundBoard: foundBoard ? foundBoard.boardId : "❌ BOARD NICHT GEFUNDEN",
-        foundTask: foundTask ? foundTask.taskId : "❌ TASK NICHT GEFUNDEN",
-        allBoardIds: state.Boards.map((b) => b.boardId),
-        allTaskIdsInBoard: foundBoard?.task.map((t) => t.taskId),
-      });
-
       return {
         ...state,
         Boards: state.Boards.map((board) =>
@@ -148,6 +138,16 @@ export function BoardCRUD(state: BoardState, action: BoardAction) {
         ),
       };
     }
+    case "ADD_USER":
+      return {
+        ...state,
+        User: {
+          ...state.User,
+          Username: action.payload,
+          UserId: String(Date.now()),
+        },
+      };
+
     default:
       return state;
   }

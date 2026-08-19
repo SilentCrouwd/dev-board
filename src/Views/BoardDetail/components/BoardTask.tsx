@@ -55,6 +55,10 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
         draggable="true"
         onDragStart={(e) => {
           e.dataTransfer.setData(`id-${currTask ? currTask.taskId : ""}`, "");
+          e.dataTransfer.setData(
+            `title-${currTask ? currTask.taskStatus : ""}`,
+            "",
+          );
         }}
       >
         <div className="grid grid-cols-[1fr_8fr_1fr] items-center  ">
@@ -64,6 +68,7 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
               key={currTask.taskId}
               currTask={currTask}
               handleUpdate={handleUpdateTask}
+              currUser={BoardContext.state.User.Username || "Nutzer"}
             />
             <p className="text-md text-muted ">{currTask.taskDescription}</p>
             <p className="text-md text-muted italic">{currTask.taskUser}</p>

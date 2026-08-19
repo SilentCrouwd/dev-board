@@ -51,7 +51,7 @@ function BoardDetail() {
         </div>
         {currentBoard && (
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10">
-            <BoardDetailCard cardTitle={"todo"} board={currentBoard} />
+            <BoardDetailCard cardTitle={"ToDo"} board={currentBoard} />
             <BoardDetailCard cardTitle={"inProgress"} board={currentBoard} />
             <BoardDetailCard cardTitle={"Done"} board={currentBoard} />
           </div>

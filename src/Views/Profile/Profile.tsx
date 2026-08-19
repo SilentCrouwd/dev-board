@@ -9,10 +9,18 @@ import {
 
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useBoardContext } from "@/Context/BoardContext";
+import { setToAPI } from "@/Hooks/StorageAPI";
+import { useEffect, useState } from "react";
 
 function Profile() {
   const [userName, setUserName] = useState("");
+  const { state, dispatch } = useBoardContext();
+
+  useEffect(() => {
+    setToAPI(state);
+  }, [state]);
+
   return (
     <div className="flex flex-col p-5 max-w-md  sm:mx-auto mt-2">
       <p className=" font-bold text-2xl">Profil</p>
@@ -40,6 +48,7 @@ function Profile() {
             className="text-sm mt-5 px-4 py-5 rounded-sm bg-primary text-main hover:cursor-pointer hover:bg-primary-foreground "
             type="submit"
             onClick={() => {
+              dispatch({ type: "ADD_USER", payload: userName });
               setUserName("");
             }}
           >
