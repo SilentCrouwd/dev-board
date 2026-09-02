@@ -2,7 +2,7 @@ import { ArrowLeft, Check, Pencil, X } from "lucide-react";
 import BoardDetailCard from "./components/BoardDetailCard";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useBoardContext } from "@/Context/BoardContext";
@@ -10,20 +10,22 @@ import { useBoardContext } from "@/Context/BoardContext";
 function BoardDetail() {
   const { state, dispatch } = useBoardContext();
   const { id } = useParams();
-
+  const [editMode, setEditMode] = useState(false);
   // Set current Board
 
   const currentBoard = state?.Boards?.find((b) => b.boardId === id);
-
+  const [value, setValue] = useState(currentBoard?.boardTitle || "");
   //edit handler toggle edit mode
 
-  const [editMode, setEditMode] = useState(false);
+  useEffect(() => {
+    if (currentBoard) {
+      setValue(currentBoard.boardTitle);
+    }
+  }, [currentBoard]);
 
   if (!currentBoard) {
     return <div>No Board found</div>;
   }
-  const [value, setValue] = useState(currentBoard.boardTitle);
-
   function renderBoardDetailContent() {
     return (
       <div className="w-full flex flex-col justify-between  px-2 mt-5 lg:max-w-[1000px] mx-auto">
@@ -116,6 +118,13 @@ function BoardDetail() {
           </Field>
         </FieldGroup>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10"></div>
+        {currentBoard && (
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 py-10">
+            <BoardDetailCard columnTitle={"ToDo"} board={currentBoard} />
+            <BoardDetailCard columnTitle={"inProgress"} board={currentBoard} />
+            <BoardDetailCard columnTitle={"Done"} board={currentBoard} />
+          </div>
+        )}
       </div>
     );
   }
