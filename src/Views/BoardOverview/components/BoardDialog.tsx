@@ -12,9 +12,11 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useBoardContext } from "@/Context/BoardContext";
-import { getFromAPI } from "@/Hooks/StorageAPI";
-import type { BoardType } from "@/types/boardType";
+import { insertBoardsToDb } from "@/Hooks/StorageAPI";
+
+import { useBoardContext } from "@/Hooks/useBoardContext";
+
+import type { BoardDb } from "@/types/boardType";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -22,18 +24,25 @@ function BoardDialog() {
   const BoardContext = useBoardContext();
   const [value, setValue] = useState("");
 
-  function handleCheckExist() {
-    const currList = getFromAPI();
-    const exist = currList.Boards.find(
-      (board: BoardType) => board.boardTitle === value,
+  async function handleCheckExist() {
+    const exist = BoardContext.state.find(
+      (board: BoardDb) => board.boardTitle === value,
     );
 
     if (!exist) {
-      BoardContext.dispatch({ type: "ADD", payload: value });
+      const insertBoard = await insertBoardsToDb({
+        boardTitle: value,
+        boardId: "wird von der db übergeben",
+        Task: [],
+      });
+      if (insertBoard) {
+        BoardContext.dispatch({ type: "ADD", payload: insertBoard });
+      }
     } else {
       alert(`${value}  ist schon vorhanden `);
     }
   }
+
   return (
     <Dialog>
       <form>

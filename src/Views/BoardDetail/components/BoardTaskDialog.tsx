@@ -15,10 +15,10 @@ import { Label } from "@/components/ui/label";
 
 import { useEffect, useState } from "react";
 import type { UpdateTask } from "./BoardTask";
-import type { Task } from "@/types/boardType";
+import type { BoardDb } from "@/types/boardType";
 
 interface TaskDialogProps {
-  currTask: Task;
+  currTask: BoardDb["Task"][number];
   currUser: string;
   handleUpdate: (updatedObj: UpdateTask) => void;
 }
@@ -27,7 +27,7 @@ function BoardTaskDialog({
   handleUpdate,
   currUser,
 }: Readonly<TaskDialogProps>) {
-  const handleDate = currTask.taskDeadline;
+  const handleDate = currTask.title;
   let isoDate = "";
   if (handleDate) {
     const [day, month, year] = handleDate.split(".");
@@ -35,15 +35,15 @@ function BoardTaskDialog({
   }
 
   const [dateValue, setDateValue] = useState(isoDate);
-  const [titleValue, setTitleValue] = useState(currTask.taskTitle);
-  const [descValue, setDescValue] = useState(currTask.taskDescription);
+  const [titleValue, setTitleValue] = useState(currTask.title);
+  const [descValue, setDescValue] = useState(currTask.description);
   const [userValue, setUserValue] = useState(currUser);
 
   useEffect(() => {
     setDateValue(isoDate);
-    setTitleValue(currTask.taskTitle);
-    setDescValue(currTask.taskDescription);
-    setUserValue(currTask.taskUser);
+    setTitleValue(currTask.title ?? "");
+    setDescValue(currTask.description ?? "");
+    setUserValue(currTask.user ?? "");
   }, [currTask]);
 
   function handleAddUpdatedTask(e: React.FormEvent) {
@@ -55,7 +55,7 @@ function BoardTaskDialog({
     }
     const updatedTask = {
       taskTitle: titleValue,
-      taskDescription: descValue,
+      taskDescription: descValue ?? "",
       taskDeadline: germanDate,
       taskUser: userValue,
     };
@@ -70,7 +70,7 @@ function BoardTaskDialog({
             variant="link"
             className=" text-lg text-main hover:cursor-pointer"
           >
-            {currTask.taskTitle}
+            {currTask.title}
           </Button>
         }
       />
@@ -108,7 +108,7 @@ function BoardTaskDialog({
                 onChange={(e) => {
                   setDescValue(e.currentTarget.value);
                 }}
-                value={descValue}
+                value={descValue ?? ""}
                 placeholder="Was soll erledigt Werden?"
                 rows={5}
               />

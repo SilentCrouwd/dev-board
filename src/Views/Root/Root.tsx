@@ -1,9 +1,8 @@
-import { useBoardContext } from "@/Context/BoardContext";
+import { useBoardContext } from "@/Hooks/useBoardContext";
 import { CircleUserRound, LayoutDashboard } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
 
 function Root() {
-  const BoardContext = useBoardContext();
   return (
     <div>
       <nav className="bg-foreground border-b border-b-primary">
@@ -17,7 +16,6 @@ function Root() {
           <Link to={"/profile"} className="flex items-center">
             <p className="text-muted flex  gap-2">
               <CircleUserRound className="w-5" />
-              {BoardContext.state.User?.Username || "Nutzer"}
             </p>
           </Link>
         </div>

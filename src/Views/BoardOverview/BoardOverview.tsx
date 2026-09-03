@@ -1,7 +1,9 @@
+import { useBoardContext } from "@/Hooks/useBoardContext";
 import BoardCard from "./components/BoardCard";
 import BoardDialog from "./components/BoardDialog";
 
-import { useBoardContext } from "@/Context/BoardContext";
+
+
 function BoardOverview() {
   const BoardContext = useBoardContext();
 
@@ -12,14 +14,14 @@ function BoardOverview() {
         <BoardDialog />
       </div>
       <div className="w-full flex justify-between items-center px-5 mt-5 lg:max-w-[1000px] mx-auto">
-        {BoardContext.state.Boards.length ? (
+        {BoardContext.state.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-3 w-full ">
-            {BoardContext.state.Boards.map((currBoard) => {
+            {BoardContext.state.map((currBoard) => {
               return (
                 <BoardCard
                   key={currBoard.boardId}
                   boardTitle={currBoard.boardTitle}
-                  taskValue={currBoard.task?.length ?? 0}
+                  taskValue={"2"}
                   boardId={String(currBoard.boardId)}
                 />
               );

@@ -9,8 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
-import { useBoardContext } from "@/Context/BoardContext";
+
 import { useState } from "react";
+import { useBoardContext } from "@/Hooks/useBoardContext";
+import { deleteFromDb } from "@/Hooks/StorageAPI";
 export interface BoardCardProps {
   boardTitle: string;
   taskValue: string | number;
@@ -23,12 +25,24 @@ function BoardCard({
 }: Readonly<BoardCardProps>) {
   const BoardContext = useBoardContext();
   const [toggleDELContext, setToggleDELContext] = useState(false);
+
+  async function handleDeleteBoard() {
+    try {
+      await deleteFromDb(boardId);
+      BoardContext.dispatch({ type: "DEL", payload: boardId });
+
+      setToggleDELContext(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <Card className="border overflow-visible bg-img-gradient">
       <CardHeader>
         <Link to={`/boards/${boardId}`}>
           <CardTitle className="hover:underline">{boardTitle}</CardTitle>
-
+          {/* Hier muss ich noch eine abgrage machen welche Tasks Das board alles hat */}
           <CardDescription className="text-xs">
             3 Spalten:{taskValue} Tasks
           </CardDescription>
@@ -50,8 +64,7 @@ function BoardCard({
                 <Button
                   variant={"default"}
                   onClick={() => {
-                    BoardContext.dispatch({ type: "DEL", payload: boardId });
-                    setToggleDELContext(false);
+                    handleDeleteBoard();
                   }}
                   className="text-white bg-red-600 border-muted text-xs  hover:bg-red-600"
                 >

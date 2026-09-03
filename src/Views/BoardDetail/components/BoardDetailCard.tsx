@@ -5,14 +5,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { BoardType, Task } from "@/types/boardType";
+import type { BoardDb } from "@/types/boardType";
 
 import { useState } from "react";
 import BoardTask from "./BoardTask";
 import BoardDetailDialog from "./BoardDetailDialog";
-import { useBoardContext } from "@/Context/BoardContext";
+import { useBoardContext } from "@/Hooks/useBoardContext";
 
 import { useParams } from "react-router-dom";
+import { upsertTasksToDb } from "@/Hooks/StorageAPI";
 
 function getIdFromDraggedItem(
   dataTransfer: DataTransfer,
@@ -29,22 +30,19 @@ function getIdFromDraggedItem(
 export interface DetailCardProps {
   columnTitle: "ToDo" | "inProgress" | "Done";
   statusValue?: number;
-  board: BoardType;
+  board: BoardDb;
 }
 function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
   const BoardContext = useBoardContext();
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   const { id } = useParams();
-  // set currBoard
-  const currentBoard =
-    BoardContext.state.Boards.find((b) => b.boardId === id) ?? board;
-
   //  check is taskStatus = column name
-  const filterColumns = currentBoard.task.filter(
-    (currTask) => currTask.taskStatus === columnTitle,
-  );
+  const currentBoard = BoardContext.state.find((board) => board.boardId === id);
 
-  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const filterColumns =
+    currentBoard?.Task.filter((currTask) => currTask.status === columnTitle) ??
+    [];
 
   // check is dragged Task Status = columnName
   function isColumInTask(startColumn: string) {
@@ -81,11 +79,12 @@ function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
     }
   }
 
-  function handleAddTask(currTask: Task, id: string) {
+  async function handleAddTask(currTask: BoardDb["Task"][number], id: string) {
     BoardContext.dispatch({
       type: "ADD_TASK",
       payload: { task: currTask, boardId: id },
     });
+    await upsertTasksToDb(currTask);
   }
 
   function handleDelTask(taskId: string) {
@@ -115,7 +114,7 @@ function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
           <BoardDetailDialog
             handleAddTask={handleAddTask}
             taskStatus={columnTitle}
-            currUser={BoardContext?.state?.User?.Username || "Nutzer"}
+            currUser={"nutzer"}
           />
         </CardAction>
       </CardHeader>

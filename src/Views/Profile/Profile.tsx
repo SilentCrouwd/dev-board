@@ -10,7 +10,7 @@ import {
 
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useBoardContext } from "@/Context/BoardContext";
+import { useBoardContext } from "@/Hooks/useBoardContext";
 import { useEffect, useState } from "react";
 
 function Profile() {

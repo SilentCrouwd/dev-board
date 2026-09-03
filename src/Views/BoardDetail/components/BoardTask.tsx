@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { GripVertical, Trash2 } from "lucide-react";
 import BoardTaskDialog from "./BoardTaskDialog";
 
-import { useBoardContext } from "@/Context/BoardContext";
+import { useBoardContext } from "@/Hooks/useBoardContext";
 
 interface BoardTask {
   currBoardId: string;
@@ -20,11 +20,11 @@ export interface UpdateTask {
 function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
   const BoardContext = useBoardContext();
 
-  const currBoard = BoardContext.state.Boards.find(
+  const currBoard = BoardContext.state.find(
     (board) => board.boardId === currBoardId,
   );
 
-  const currTask = currBoard?.task.find((task) => task.taskId === currTaskId);
+  const currTask = currBoard?.Task.find((task) => task.taskId === currTaskId);
 
   function handleUpdateTask(currUpdatedObj: UpdateTask) {
     BoardContext.dispatch({
@@ -50,7 +50,7 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
         onDragStart={(e) => {
           e.dataTransfer.setData(`id-${currTask ? currTask.taskId : ""}`, "");
           e.dataTransfer.setData(
-            `title-${currTask ? currTask.taskStatus : ""}`,
+            `title-${currTask ? currTask.status : ""}`,
             "",
           );
         }}
@@ -62,11 +62,11 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
               key={currTask.taskId}
               currTask={currTask}
               handleUpdate={handleUpdateTask}
-              currUser={BoardContext.state.User.Username || "Nutzer"}
+              currUser={"Nutzer"}
             />
-            <p className="text-md text-muted ">{currTask.taskDescription}</p>
-            <p className="text-md text-muted italic">{currTask.taskUser}</p>
-            <p className="text-md text-red-600">{currTask.taskDeadline}</p>
+            <p className="text-md text-muted ">{currTask.description}</p>
+            <p className="text-md text-muted italic">{currTask.user}</p>
+            <p className="text-md text-red-600">{currTask.deadline}</p>
           </div>
           <Button
             variant="ghost"

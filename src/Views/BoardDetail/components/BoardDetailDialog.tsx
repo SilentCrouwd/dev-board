@@ -40,12 +40,13 @@ function BoardDetailDialog({ handleAddTask, taskStatus, currUser }: any) {
     const user = formData.get("taskUser") as string;
 
     const newData = {
-      taskDeadline: germanDate,
-      taskDescription: description,
-      taskTitle: title,
+      boardId: id,
+      deadline: germanDate || null,
+      description: description || null,
+      status: taskStatus,
       taskId: String(Date.now()),
-      taskStatus: taskStatus,
-      taskUser: user,
+      title: title,
+      user: user || null,
     };
 
     handleAddTask(newData, id);

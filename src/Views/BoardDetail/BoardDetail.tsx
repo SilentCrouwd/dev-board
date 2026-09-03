@@ -5,27 +5,41 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useBoardContext } from "@/Context/BoardContext";
+import { useBoardContext } from "@/Hooks/useBoardContext";
+import { getBoardsFromDB, updateBoardsToDb } from "@/Hooks/StorageAPI";
+import type { BoardDb } from "@/types/boardType";
 
 function BoardDetail() {
-  const { state, dispatch } = useBoardContext();
+  const boardContext = useBoardContext();
   const { id } = useParams();
   const [editMode, setEditMode] = useState(false);
-  // Set current Board
-
-  const currentBoard = state?.Boards?.find((b) => b.boardId === id);
+  const [currentBoard, setCurrentBoard] = useState<BoardDb | undefined>(
+    undefined,
+  );
   const [value, setValue] = useState(currentBoard?.boardTitle || "");
-  //edit handler toggle edit mode
 
   useEffect(() => {
-    if (currentBoard) {
-      setValue(currentBoard.boardTitle);
-    }
-  }, [currentBoard]);
+    handleGetBoardsFromDb();
+  }, [boardContext.state]);
+
+  async function handleGetBoardsFromDb() {
+    const newBoards = await getBoardsFromDB();
+    const currentBoards = newBoards.find((b) => b.boardId === id);
+
+    setCurrentBoard(currentBoards);
+  }
+  async function handleUpdateTitle() {
+    if (id) await updateBoardsToDb(value, id);
+    boardContext.dispatch({
+      type: "UPDATE",
+      payload: { id: String(id), value: value },
+    });
+  }
 
   if (!currentBoard) {
     return <div>No Board found</div>;
   }
+
   function renderBoardDetailContent() {
     return (
       <div className="w-full flex flex-col justify-between  px-2 mt-5 lg:max-w-[1000px] mx-auto">
@@ -47,6 +61,9 @@ function BoardDetail() {
             size="icon-lg"
             onClick={() => {
               setEditMode(!editMode);
+              if (currentBoard) {
+                setValue(currentBoard.boardTitle);
+              }
             }}
             className="hover:bg-primary-foreground hover:cursor-pointer"
           >
@@ -93,9 +110,6 @@ function BoardDetail() {
               variant="outline"
               onClick={() => {
                 setEditMode(!editMode);
-                if (currentBoard) {
-                  setValue(currentBoard.boardTitle);
-                }
               }}
               className="border-none order-1 hover:bg-primary-foreground hover:cursor-pointer"
             >
@@ -105,11 +119,7 @@ function BoardDetail() {
               type="submit"
               className="bg-transparent text-main hover:cursor-pointer"
               onClick={() => {
-                dispatch({
-                  type: "UPDATE",
-                  payload: { id: String(id), value: value },
-                });
-
+                handleUpdateTitle();
                 setEditMode(!editMode);
               }}
             >
