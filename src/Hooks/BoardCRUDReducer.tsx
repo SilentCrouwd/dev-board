@@ -1,12 +1,5 @@
 import type { BoardDb } from "@/types/boardType";
 
-// export interface BoardState {
-//   User: {
-//     Username: string;
-//     UserId: string;
-//   };
-//   Boards: BoardType[];
-// }
 export interface TaskState {
   Task: BoardDb["Task"];
 }
@@ -65,15 +58,6 @@ export function BoardCRUD(state: BoardDb[], action: BoardAction) {
       return newState;
     }
 
-    // return {
-    //   ...state,
-    //   Boards: state.Boards.map((board) =>
-    //     board.boardId === action.payload.id
-    //       ? { ...board, boardTitle: action.payload.value }
-    //       : board,
-    //   ),
-    // };
-
     case "ADD_TASK": {
       const newState = state.map((board) => {
         return board.boardId === action.payload.boardId
@@ -82,15 +66,6 @@ export function BoardCRUD(state: BoardDb[], action: BoardAction) {
       });
       return newState;
     }
-
-    // return {
-    //     ...state,
-    //     Boards: state.Boards.map((board) =>
-    //       board.boardId === action.payload.boardId
-    //         ? { ...board, task: [...board.task, action.payload.task] }
-    //         : board,
-    //     ),
-    //   };
     case "DEL_TASK": {
       const newState = state.map((board) =>
         board.boardId === action.payload.boardId
@@ -104,20 +79,6 @@ export function BoardCRUD(state: BoardDb[], action: BoardAction) {
       );
       return newState;
     }
-
-    //   return {
-    //     ...state,
-    //     Boards: state.Boards.map((board) =>
-    //       board.boardId === action.payload.boardId
-    //         ? {
-    //             ...board,
-    //             task: board.task.filter(
-    //               (t) => t.taskId !== action.payload.taskId,
-    //             ),
-    //           }
-    //         : board,
-    //     ),
-    //   };
 
     case "UPDATE_TASK": {
       const newState = state.map((boards) =>
@@ -134,27 +95,6 @@ export function BoardCRUD(state: BoardDb[], action: BoardAction) {
       );
       return newState;
     }
-    //   return {
-    //     ...state,
-
-    //     Boards: state.Boards.map((boards) =>
-    //       boards.boardId === action.payload.boardId
-    //         ? {
-    //             ...boards,
-
-    //             task: boards.task.map((task) =>
-    //               task.taskId === action.payload.taskId
-    //                 ? {
-    //                     ...task,
-
-    //                     ...action.payload.updatedObj,
-    //                   }
-    //                 : task,
-    //             ),
-    //           }
-    //         : boards,
-    //     ),
-    //   };
     case "UPDATE_TASK_STATUS": {
       const newState = state.map((board) =>
         board.boardId === action.payload.boardId
@@ -169,32 +109,7 @@ export function BoardCRUD(state: BoardDb[], action: BoardAction) {
           : board,
       );
       return newState;
-      // return {
-      //   ...state,
-      //   Boards: state.Boards.map((board) =>
-      //     board.boardId === action.payload.boardId
-      //       ? {
-      //           ...board,
-      //           task: board.task.map((task) =>
-      //             task.taskId === action.payload.taskId
-      //               ? { ...task, taskStatus: action.payload.columnName }
-      //               : task,
-      //           ),
-      //         }
-      //       : board,
-      //   ),
-      // };
     }
-    // case "ADD_USER":
-    //   return {
-    //     ...state,
-    //     User: {
-    //       ...state.User,
-    //       Username: action.payload,
-    //       UserId: String(Date.now()),
-    //     },
-    //   };
-
     default:
       return state;
   }
