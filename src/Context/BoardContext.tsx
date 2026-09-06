@@ -1,5 +1,5 @@
 import { BoardCRUD, type BoardAction } from "@/Hooks/BoardCRUDReducer";
-import { getBoardsFromDB, insertBoardsToDb } from "@/Hooks/StorageAPI";
+import { getBoardsFromDB } from "@/Hooks/StorageAPI";
 import type { BoardDb } from "@/types/boardType";
 import { createContext, useEffect, useReducer, type ReactNode } from "react";
 

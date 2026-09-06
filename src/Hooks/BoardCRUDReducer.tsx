@@ -25,12 +25,7 @@ export type BoardAction =
       payload: {
         boardId: string;
         taskId: string;
-        updatedObj: {
-          taskTitle: string;
-          taskDescription: string;
-          taskDeadline: string;
-          taskUser: string;
-        };
+        updatedObj: BoardDb["Task"][number];
       };
     }
   | {
@@ -96,7 +91,20 @@ export function BoardCRUD(state: BoardDb[], action: BoardAction) {
     //         : board,
     //     ),
     //   };
-    // // case "DEL_TASK":
+    case "DEL_TASK": {
+      const newState = state.map((board) =>
+        board.boardId === action.payload.boardId
+          ? {
+              ...board,
+              Task: board.Task.filter(
+                (task) => task.taskId !== action.payload.taskId,
+              ),
+            }
+          : board,
+      );
+      return newState;
+    }
+
     //   return {
     //     ...state,
     //     Boards: state.Boards.map((board) =>
@@ -111,7 +119,21 @@ export function BoardCRUD(state: BoardDb[], action: BoardAction) {
     //     ),
     //   };
 
-    // case "UPDATE_TASK":
+    case "UPDATE_TASK": {
+      const newState = state.map((boards) =>
+        boards.boardId === action.payload.boardId
+          ? {
+              ...boards,
+              Task: boards.Task.map((tasks) =>
+                tasks.taskId === action.payload.taskId
+                  ? { ...tasks, ...action.payload.updatedObj }
+                  : tasks,
+              ),
+            }
+          : boards,
+      );
+      return newState;
+    }
     //   return {
     //     ...state,
 
@@ -133,23 +155,36 @@ export function BoardCRUD(state: BoardDb[], action: BoardAction) {
     //         : boards,
     //     ),
     //   };
-    // case "UPDATE_TASK_STATUS": {
-    //   return {
-    //     ...state,
-    //     Boards: state.Boards.map((board) =>
-    //       board.boardId === action.payload.boardId
-    //         ? {
-    //             ...board,
-    //             task: board.task.map((task) =>
-    //               task.taskId === action.payload.taskId
-    //                 ? { ...task, taskStatus: action.payload.columnName }
-    //                 : task,
-    //             ),
-    //           }
-    //         : board,
-    //     ),
-    //   };
-    // }
+    case "UPDATE_TASK_STATUS": {
+      const newState = state.map((board) =>
+        board.boardId === action.payload.boardId
+          ? {
+              ...board,
+              Task: board.Task.map((task) =>
+                task.taskId === action.payload.taskId
+                  ? { ...task, status: action.payload.columnName }
+                  : task,
+              ),
+            }
+          : board,
+      );
+      return newState;
+      // return {
+      //   ...state,
+      //   Boards: state.Boards.map((board) =>
+      //     board.boardId === action.payload.boardId
+      //       ? {
+      //           ...board,
+      //           task: board.task.map((task) =>
+      //             task.taskId === action.payload.taskId
+      //               ? { ...task, taskStatus: action.payload.columnName }
+      //               : task,
+      //           ),
+      //         }
+      //       : board,
+      //   ),
+      // };
+    }
     // case "ADD_USER":
     //   return {
     //     ...state,

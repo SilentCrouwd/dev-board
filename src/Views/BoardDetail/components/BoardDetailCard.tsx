@@ -13,7 +13,11 @@ import BoardDetailDialog from "./BoardDetailDialog";
 import { useBoardContext } from "@/Hooks/useBoardContext";
 
 import { useParams } from "react-router-dom";
-import { upsertTasksToDb } from "@/Hooks/StorageAPI";
+import {
+  deleteTaskFromDb,
+  updateTaskStatusToDb,
+  upsertTasksToDb,
+} from "@/Hooks/StorageAPI";
 
 function getIdFromDraggedItem(
   dataTransfer: DataTransfer,
@@ -32,7 +36,7 @@ export interface DetailCardProps {
   statusValue?: number;
   board: BoardDb;
 }
-function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
+function BoardDetailCard({ columnTitle }: Readonly<DetailCardProps>) {
   const BoardContext = useBoardContext();
   const [isDraggingOver, setIsDraggingOver] = useState(false);
 
@@ -60,7 +64,7 @@ function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
     }
   }
 
-  function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+  async function handleDrop(event: React.DragEvent<HTMLDivElement>) {
     event.preventDefault();
 
     setIsDraggingOver(false);
@@ -68,32 +72,37 @@ function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
     const taskId = getIdFromDraggedItem(event.dataTransfer, "id");
 
     if (id && taskId) {
+      const updatedTask = await updateTaskStatusToDb(columnTitle, taskId);
+
       BoardContext.dispatch({
         type: "UPDATE_TASK_STATUS",
         payload: {
           boardId: id,
           taskId: String(taskId),
-          columnName: columnTitle,
+          columnName: updatedTask ? updatedTask.status : "",
         },
       });
     }
   }
 
   async function handleAddTask(currTask: BoardDb["Task"][number], id: string) {
-    BoardContext.dispatch({
-      type: "ADD_TASK",
-      payload: { task: currTask, boardId: id },
-    });
-    await upsertTasksToDb(currTask);
+    const savedTask = await upsertTasksToDb(currTask);
+    if (savedTask) {
+      BoardContext.dispatch({
+        type: "ADD_TASK",
+        payload: { task: savedTask, boardId: id },
+      });
+    }
   }
 
-  function handleDelTask(taskId: string) {
+  async function handleDelTask(taskId: string) {
     if (id) {
       BoardContext.dispatch({
         type: "DEL_TASK",
         payload: { boardId: id, taskId },
       });
     }
+    await deleteTaskFromDb(taskId);
   }
 
   return (
@@ -124,9 +133,9 @@ function BoardDetailCard({ columnTitle, board }: Readonly<DetailCardProps>) {
         >
           hier ablegen
         </div>
-        {filterColumns.map((currTask) => (
+        {filterColumns.map((currTask, index) => (
           <BoardTask
-            key={currTask.taskId}
+            key={index}
             currTaskId={currTask.taskId}
             handleDelTask={handleDelTask}
             currBoardId={String(id)}

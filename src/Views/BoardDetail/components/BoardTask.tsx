@@ -4,6 +4,9 @@ import { GripVertical, Trash2 } from "lucide-react";
 import BoardTaskDialog from "./BoardTaskDialog";
 
 import { useBoardContext } from "@/Hooks/useBoardContext";
+import { updateTaskToDb } from "@/Hooks/StorageAPI";
+import type { BoardDb } from "@/types/boardType";
+import { useEffect, useState } from "react";
 
 interface BoardTask {
   currBoardId: string;
@@ -11,14 +14,15 @@ interface BoardTask {
   handleDelTask: (id: string) => void;
 }
 export interface UpdateTask {
-  taskTitle: string;
-  taskDescription: string;
-  taskDeadline: string;
-  taskUser: string;
+  title: string;
+  description: string;
+  deadline: string;
+  user: string;
 }
 
 function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
   const BoardContext = useBoardContext();
+  const [germanDateState, setGermanDateState] = useState<string>("");
 
   const currBoard = BoardContext.state.find(
     (board) => board.boardId === currBoardId,
@@ -26,15 +30,19 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
 
   const currTask = currBoard?.Task.find((task) => task.taskId === currTaskId);
 
-  function handleUpdateTask(currUpdatedObj: UpdateTask) {
-    BoardContext.dispatch({
-      type: "UPDATE_TASK",
-      payload: {
-        boardId: currBoardId,
-        taskId: currTaskId,
-        updatedObj: currUpdatedObj,
-      },
-    });
+  async function handleUpdateTask(currUpdatedObj: BoardDb["Task"][number]) {
+    const updatedTask = await updateTaskToDb(currUpdatedObj);
+
+    if (updatedTask) {
+      BoardContext.dispatch({
+        type: "UPDATE_TASK",
+        payload: {
+          boardId: currBoardId,
+          taskId: currTaskId,
+          updatedObj: updatedTask,
+        },
+      });
+    }
   }
 
   if (!BoardContext.state) {
@@ -43,6 +51,19 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
     if (!currTask) {
       return <div>Keine Task Gefunden</div>;
     }
+    useEffect(() => {
+      const handleDate = currTask.deadline;
+
+      let germanDate = "";
+
+      if (handleDate) {
+        const [year, month, day] = handleDate.split("-");
+        germanDate = `${day}.${month}.${year}`;
+
+        setGermanDateState(germanDate);
+      }
+    }, [currTask.deadline]);
+
     return (
       <div
         className=" w-full border rounded-md p-5 bg-img-gradient  cursor-grab"
@@ -66,7 +87,7 @@ function BoardTask({ handleDelTask, currTaskId, currBoardId }: BoardTask) {
             />
             <p className="text-md text-muted ">{currTask.description}</p>
             <p className="text-md text-muted italic">{currTask.user}</p>
-            <p className="text-md text-red-600">{currTask.deadline}</p>
+            <p className="text-md text-red-600">{germanDateState}</p>
           </div>
           <Button
             variant="ghost"

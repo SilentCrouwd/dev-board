@@ -14,33 +14,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { useEffect, useState } from "react";
-import type { UpdateTask } from "./BoardTask";
+
 import type { BoardDb } from "@/types/boardType";
 
 interface TaskDialogProps {
   currTask: BoardDb["Task"][number];
   currUser: string;
-  handleUpdate: (updatedObj: UpdateTask) => void;
+  handleUpdate: (updatedObj: BoardDb["Task"][number]) => void;
 }
 function BoardTaskDialog({
   currTask,
   handleUpdate,
   currUser,
 }: Readonly<TaskDialogProps>) {
-  const handleDate = currTask.title;
-  let isoDate = "";
-  if (handleDate) {
-    const [day, month, year] = handleDate.split(".");
-    isoDate = `${year}-${month}-${day}`;
-  }
-
-  const [dateValue, setDateValue] = useState(isoDate);
+  const [dateValue, setDateValue] = useState(currTask.deadline);
   const [titleValue, setTitleValue] = useState(currTask.title);
   const [descValue, setDescValue] = useState(currTask.description);
   const [userValue, setUserValue] = useState(currUser);
 
   useEffect(() => {
-    setDateValue(isoDate);
+    setDateValue(currTask.deadline);
     setTitleValue(currTask.title ?? "");
     setDescValue(currTask.description ?? "");
     setUserValue(currTask.user ?? "");
@@ -48,16 +41,13 @@ function BoardTaskDialog({
 
   function handleAddUpdatedTask(e: React.FormEvent) {
     e.preventDefault();
-    let germanDate = "";
-    if (dateValue) {
-      const [year, month, day] = dateValue.split("-");
-      germanDate = `${day}.${month}.${year}`;
-    }
-    const updatedTask = {
-      taskTitle: titleValue,
-      taskDescription: descValue ?? "",
-      taskDeadline: germanDate,
-      taskUser: userValue,
+
+    const updatedTask: BoardDb["Task"][number] = {
+      ...currTask,
+      title: titleValue,
+      description: descValue,
+      deadline: dateValue || null,
+      user: userValue,
     };
     handleUpdate(updatedTask);
   }
@@ -138,7 +128,7 @@ function BoardTaskDialog({
                 onChange={(e) => {
                   setDateValue(e.currentTarget.value);
                 }}
-                value={dateValue}
+                value={dateValue ?? ""}
               />
             </Field>
             <DialogClose

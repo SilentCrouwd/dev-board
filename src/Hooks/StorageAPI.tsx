@@ -2,6 +2,24 @@ import { supabase } from "@/lib/supabase/supabaseClient";
 
 import type { BoardDb } from "@/types/boardType";
 
+// Auth
+
+export async function signInWithEmail(
+  inputEmail: string,
+  inputPassword: string,
+) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: inputEmail,
+    password: inputPassword,
+  });
+  if (error) {
+    console.log(error);
+  }
+  console.log(data);
+
+  return data;
+}
+
 // const LOCAL_STORAGE_KEY = "Boards";
 
 // export function setToAPI(board: BoardState) {
@@ -68,10 +86,14 @@ export async function updateBoardsToDb(boardTitle: string, id: string) {
 }
 
 // Nutze ein Array als Typ für den Parameter
-export async function upsertTasksToDb(tasks: BoardDb["Task"][number]) {
-  const { taskId, ...rest } = tasks;
+export async function upsertTasksToDb(task: BoardDb["Task"][number]) {
+  const newTask = task.taskId ? task : (({ taskId, ...rest }) => rest)(task);
 
-  const { data, error } = await supabase.from("Task").upsert(rest).select();
+  const { data, error } = await supabase
+    .from("Task")
+    .upsert(newTask)
+    .select()
+    .single();
 
   if (error) {
     console.error("Fehler beim Upsert:", error);
@@ -79,4 +101,40 @@ export async function upsertTasksToDb(tasks: BoardDb["Task"][number]) {
   }
 
   return data;
+}
+
+export async function updateTaskToDb(task: BoardDb["Task"][number]) {
+  const { data, error } = await supabase
+    .from("Task")
+    .update(task)
+    .eq("taskId", task.taskId)
+    .select()
+    .single();
+
+  if (error) {
+    console.log(error);
+  } else {
+    return data;
+  }
+}
+
+export async function deleteTaskFromDb(id: string) {
+  const { error } = await supabase.from("Task").delete().eq("taskId", id);
+  if (error) {
+    console.log(error);
+  }
+}
+export async function updateTaskStatusToDb(taskStatus: string, taskId: string) {
+  const { data, error } = await supabase
+    .from("Task")
+    .update({ status: taskStatus })
+    .eq("taskId", taskId)
+    .select()
+    .single();
+
+  if (error) {
+    console.log(error);
+  } else {
+    return data;
+  }
 }

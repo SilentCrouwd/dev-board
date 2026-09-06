@@ -31,20 +31,13 @@ function BoardDetailDialog({ handleAddTask, taskStatus, currUser }: any) {
 
     const date = formData.get("taskDeadline") as string;
 
-    let germanDate = "";
-
-    if (date) {
-      const [year, month, day] = date.split("-");
-      germanDate = `${day}.${month}.${year}`;
-    }
     const user = formData.get("taskUser") as string;
 
     const newData = {
       boardId: id,
-      deadline: germanDate || null,
+      deadline: date || null,
       description: description || null,
       status: taskStatus,
-      taskId: String(Date.now()),
       title: title,
       user: user || null,
     };
