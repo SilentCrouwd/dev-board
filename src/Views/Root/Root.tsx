@@ -1,7 +1,41 @@
-import { CircleUserRound, LayoutDashboard } from "lucide-react";
+import { signInWithEmail } from "@/Hooks/StorageAPI";
+
+import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
+import LoginForm from "./components/LoginForm";
+import { CircleUserRound, LayoutDashboard } from "lucide-react";
+import { supabase } from "@/lib/supabase/supabaseClient";
+import type { Session } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
 
 function Root() {
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleLogin(email: string, password: string) {
+    if (email && password) {
+      await signInWithEmail(email, password);
+    }
+  }
+  function handleLogout() {
+    supabase.auth.signOut();
+  }
+  function handleLoginAsGuest() {
+    supabase.auth.signInAnonymously();
+  }
   return (
     <div>
       <nav className="bg-foreground border-b border-b-primary">
@@ -12,15 +46,35 @@ function Root() {
               DevBoard
             </p>
           </Link>
-          <Link to={"/profile"} className="flex items-center">
+          <div className="flex items-center gap-5">
+            {session && (
+              <Button
+                variant="outline"
+                className="text-primary hover:text-primary-foreground"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            )}
+
             <p className="text-muted flex  gap-2">
-              <CircleUserRound className="w-5" />
+              <CircleUserRound
+                className={`w-5  ${session ? "text-green-600" : "text-red-900"}`}
+              />
             </p>
-          </Link>
+          </div>
         </div>
       </nav>
 
-      <Outlet></Outlet>
+      {session ? (
+        <Outlet></Outlet>
+      ) : (
+        <LoginForm
+          handleLogin={handleLogin}
+          className="max-w-sm mx-auto"
+          handleGuest={handleLoginAsGuest}
+        />
+      )}
     </div>
   );
 }
