@@ -1,7 +1,7 @@
 import { signInWithEmail } from "@/Hooks/StorageAPI";
 
 import { useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import { CircleUserRound, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/lib/supabase/supabaseClient";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 function Root() {
   const [session, setSession] = useState<Session | null>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -28,13 +28,18 @@ function Root() {
   async function handleLogin(email: string, password: string) {
     if (email && password) {
       await signInWithEmail(email, password);
+
+      navigate("/boards");
+      window.location.reload();
     }
   }
-  function handleLogout() {
-    supabase.auth.signOut();
+  async function handleLogout() {
+    await supabase.auth.signOut();
   }
-  function handleLoginAsGuest() {
-    supabase.auth.signInAnonymously();
+  async function handleLoginAsGuest() {
+    await supabase.auth.signInAnonymously();
+    navigate("/boards");
+    window.location.reload();
   }
   return (
     <div>

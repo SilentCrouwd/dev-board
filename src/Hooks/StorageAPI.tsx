@@ -14,6 +14,7 @@ export async function signInWithEmail(
   });
   if (error) {
     console.log(error);
+
   }
   console.log(data);
 
