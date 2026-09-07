@@ -30,7 +30,6 @@ function Root() {
       await signInWithEmail(email, password);
 
       navigate("/boards");
-      window.location.reload();
     }
   }
   async function handleLogout() {
@@ -39,7 +38,6 @@ function Root() {
   async function handleLoginAsGuest() {
     await supabase.auth.signInAnonymously();
     navigate("/boards");
-    window.location.reload();
   }
   return (
     <div>
